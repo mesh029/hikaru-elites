@@ -11,26 +11,59 @@ const interests = ["Kids", "School", "Coaching"] as const;
 export function ContactForm() {
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
-  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [interest, setInterest] = useState<(typeof interests)[number]>("Kids");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const next = () => setStep((s) => Math.min(s + 1, 2));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setError(null);
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          interest,
+          message,
+        }),
+      });
+
+      const payload = (await res.json()) as { ok?: boolean; error?: string };
+      if (!res.ok || !payload.ok) {
+        throw new Error(payload.error || "Something went wrong.");
+      }
+
+      setSent(true);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not send your message. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (sent) {
     return (
       <div className="border border-secondary/50 bg-secondary/10 p-6">
-        <p className="text-lg font-semibold text-secondary">Inquiry staged</p>
+        <p className="text-lg font-semibold text-secondary">Message sent</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Prototype only for now. We can wire this to email or WhatsApp later. Nice move,{" "}
-          {name || "friend"}.
+          Thanks, {name || "friend"}. Check {email} for a confirmation from us.
+          Our team will follow up soon.
         </p>
       </div>
     );
@@ -42,10 +75,7 @@ export function ContactForm() {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className={cn(
-              "h-1 flex-1",
-              i <= step ? "bg-primary" : "bg-border"
-            )}
+            className={cn("h-1 flex-1", i <= step ? "bg-primary" : "bg-border")}
           />
         ))}
       </div>
@@ -73,13 +103,25 @@ export function ContactForm() {
               />
             </label>
             <label className="block">
-              <span className="text-sm">Phone or email</span>
+              <span className="text-sm">Email</span>
               <input
                 required
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-2 w-full border border-border bg-background px-3 py-3 outline-none focus:border-primary"
-                placeholder="+254… or email"
+                placeholder="you@email.com"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm">
+                Phone <span className="text-muted-foreground">(optional)</span>
+              </span>
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-2 w-full border border-border bg-background px-3 py-3 outline-none focus:border-primary"
+                placeholder="+254…"
               />
             </label>
             <Button type="button" onClick={next} className="w-full sm:w-auto">
@@ -143,17 +185,30 @@ export function ContactForm() {
               <textarea
                 required
                 rows={5}
+                minLength={10}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="mt-2 w-full resize-none border border-border bg-background px-3 py-3 outline-none focus:border-primary"
                 placeholder="School name, age group, preferred days…"
               />
             </label>
+            {error ? (
+              <p className="border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {error}
+              </p>
+            ) : null}
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={back}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={back}
+                disabled={submitting}
+              >
                 Back
               </Button>
-              <Button type="submit">Send inquiry</Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "Sending…" : "Send inquiry"}
+              </Button>
             </div>
           </motion.div>
         ) : null}

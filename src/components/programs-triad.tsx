@@ -25,7 +25,6 @@ export function ProgramsTriad() {
           </h2>
         </Reveal>
 
-        {/* Mobile: snap carousel */}
         <div className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 md:hidden">
           {programs.map((program) => (
             <article
@@ -35,7 +34,7 @@ export function ProgramsTriad() {
               <div className="relative aspect-[4/5]">
                 <Image
                   src={program.image}
-                  alt={program.title}
+                  alt={program.imageAlt}
                   fill
                   className="object-cover"
                   sizes="85vw"
@@ -62,7 +61,6 @@ export function ProgramsTriad() {
           ))}
         </div>
 
-        {/* Desktop: expandable triad */}
         <div className="mt-12 hidden h-[min(70vh,640px)] md:flex">
           {programs.map((program, index) => {
             const expanded = active === index;
@@ -81,7 +79,7 @@ export function ProgramsTriad() {
               >
                 <Image
                   src={program.image}
-                  alt={program.title}
+                  alt={program.imageAlt}
                   fill
                   className="object-cover transition-transform duration-700"
                   style={{ transform: expanded ? "scale(1.04)" : "scale(1)" }}

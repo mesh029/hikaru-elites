@@ -6,7 +6,6 @@ export type GalleryItem = {
   alt: string;
   caption: string;
   category: Exclude<GalleryCategory, "all">;
-  /** Pin height for masonry layout */
   pin: "short" | "medium" | "tall";
 };
 
@@ -20,6 +19,68 @@ export type Article = {
   image: string;
   body: string[];
 };
+
+/** Sirv CDN — Hikaru field photos */
+export const sirv = {
+  host: "https://meshackariri.sirv.com",
+  folder: "/chess101/chess",
+} as const;
+
+function sirvUrl(file: string, query = "w=1600&q=80") {
+  return `${sirv.host}${sirv.folder}/${file}?${query}`;
+}
+
+function unsplash(id: string, w = 1600) {
+  return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+}
+
+/**
+ * Every src below is unique site-wide.
+ * Hero keeps the classic board. Sections use Hikaru Sirv shots +
+ * free African / kids chess atmosphere photos (not Chess Masala hotlinks).
+ */
+export const photos = {
+  heroBoard: {
+    src: unsplash("photo-1529699211952-734e80c4d42b", 2400),
+    alt: "Chess board mid-game",
+  },
+  kidsSession: {
+    src: sirvUrl("IMG-20250727-WA0078.jpg"),
+    alt: "Children gathered around a chess game",
+  },
+  teachingBoard: {
+    src: sirvUrl("IMG-20250722-WA0166.jpg"),
+    alt: "Coach presenting a roll-up teaching chess board",
+  },
+  focusedPlay: {
+    src: sirvUrl("IMG-20250727-WA0088.jpg"),
+    alt: "Chess player focused at an outdoor board",
+  },
+  demoBoard: {
+    src: sirvUrl("IMG-20250722-WA0164.jpg"),
+    alt: "Hikaru coach holding a demonstration chess board outdoors",
+  },
+  lakesideCoach: {
+    src: sirvUrl("IMG-20250722-WA0177.jpg"),
+    alt: "Coach with chess set by the water",
+  },
+  outdoorSession: {
+    src: sirvUrl("IMG-20250727-WA0042.jpg"),
+    alt: "Outdoor chess session in Kenya",
+  },
+  groupPlay: {
+    src: sirvUrl("IMG-20250727-WA0048.jpg"),
+    alt: "Players gathered for an outdoor chess match",
+  },
+  boardCircle: {
+    src: sirvUrl("IMG-20250727-WA0069.jpg"),
+    alt: "Chess circle during a community session",
+  },
+  sideTable: {
+    src: sirvUrl("IMG-20250727-WA0084.jpg"),
+    alt: "Focused play at a side table",
+  },
+} as const;
 
 export const navLinks = [
   { href: "/programs", label: "Programs" },
@@ -35,155 +96,112 @@ export const programs = [
     title: "Kids",
     line: "First moves that stick for life.",
     body: "Age-ready chess training that builds focus, patience, and competitive confidence, without killing the fun.",
-    image:
-      "https://images.unsplash.com/photo-1580894732444-8ae875adcd39?auto=format&fit=crop&w=1400&q=80",
+    image: photos.kidsSession.src,
+    imageAlt: photos.kidsSession.alt,
   },
   {
     id: "schools",
     title: "Schools",
     line: "We bring the board to your campus.",
     body: "Structured school programs, club setups, and term-long training that fit real timetables and real classrooms.",
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=80",
+    image: photos.teachingBoard.src,
+    imageAlt: photos.teachingBoard.alt,
   },
   {
     id: "coaching",
     title: "Coaching",
     line: "Private pressure. Personal progress.",
     body: "One-to-one or small-group coaching for anyone hungry to improve, from beginners to tournament hopefuls.",
-    image:
-      "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=1400&q=80",
+    image: photos.focusedPlay.src,
+    imageAlt: photos.focusedPlay.alt,
   },
 ] as const;
 
+export const momentImage = photos.demoBoard;
+export const aboutImage = photos.lakesideCoach;
+export const heroImage = photos.heroBoard;
+
+/** Gallery: remaining Hikaru Sirv shot + African / kids chess atmosphere */
 export const galleryItems: GalleryItem[] = [
   {
-    id: "1",
-    src: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=900&q=80",
-    alt: "Chess board mid-game",
-    caption: "Focus under the clock",
-    category: "coaching",
+    id: "g1",
+    src: photos.outdoorSession.src,
+    alt: photos.outdoorSession.alt,
+    caption: "Session under open sky",
+    category: "events",
     pin: "tall",
   },
   {
-    id: "2",
-    src: "https://images.unsplash.com/photo-1586165368502-1bad197a6461?auto=format&fit=crop&w=900&q=80",
-    alt: "Chess pieces on board",
-    caption: "Endgame precision",
+    id: "g2",
+    src: photos.groupPlay.src,
+    alt: photos.groupPlay.alt,
+    caption: "Match day crowd",
     category: "events",
     pin: "medium",
   },
   {
-    id: "3",
-    src: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
-    alt: "Students learning together",
-    caption: "School session energy",
-    category: "schools",
+    id: "g3",
+    src: photos.boardCircle.src,
+    alt: photos.boardCircle.alt,
+    caption: "Community board circle",
+    category: "kids",
     pin: "short",
   },
   {
-    id: "4",
-    src: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80",
-    alt: "Classroom learning",
-    caption: "Boards in the classroom",
-    category: "schools",
-    pin: "tall",
-  },
-  {
-    id: "5",
-    src: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=900&q=80",
-    alt: "Youth training session",
-    caption: "Junior club night",
-    category: "kids",
-    pin: "medium",
-  },
-  {
-    id: "6",
-    src: "https://images.unsplash.com/photo-1580894732444-8ae875adcd39?auto=format&fit=crop&w=900&q=80",
-    alt: "Child studying intently",
-    caption: "First serious calculation",
-    category: "kids",
-    pin: "tall",
-  },
-  {
-    id: "7",
-    src: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=900&q=80",
-    alt: "Notebook and planning",
-    caption: "Opening prep notes",
+    id: "g4",
+    src: photos.sideTable.src,
+    alt: photos.sideTable.alt,
+    caption: "Quiet table, loud minds",
     category: "coaching",
-    pin: "short",
+    pin: "tall",
   },
   {
-    id: "8",
-    src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80",
-    alt: "School hallway activity",
-    caption: "Campus club launch",
-    category: "schools",
+    id: "g5",
+    src: unsplash("photo-1577896851231-70ef18881754"),
+    alt: "Youth training session",
+    caption: "Club night focus",
+    category: "coaching",
     pin: "medium",
   },
   {
-    id: "9",
-    src: "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?auto=format&fit=crop&w=900&q=80",
+    id: "g6",
+    src: unsplash("photo-1503676260728-1c00da094a0b"),
+    alt: "Students learning together",
+    caption: "School energy",
+    category: "schools",
+    pin: "short",
+  },
+  {
+    id: "g7",
+    src: unsplash("photo-1606092195730-5d7b9af1efc5"),
     alt: "Kids collaborating",
     caption: "Team puzzle battle",
     category: "kids",
-    pin: "short",
-  },
-  {
-    id: "10",
-    src: "https://images.unsplash.com/photo-1560785496-3e4a7dd6d06d?auto=format&fit=crop&w=900&q=80",
-    alt: "Mentor guiding student",
-    caption: "One-to-one coaching",
-    category: "coaching",
-    pin: "tall",
-  },
-  {
-    id: "11",
-    src: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=80",
-    alt: "Study materials on desk",
-    caption: "Homework that feels like play",
-    category: "kids",
     pin: "medium",
   },
   {
-    id: "12",
-    src: "https://images.unsplash.com/photo-1488190211100-a25e6e0b3e80?auto=format&fit=crop&w=900&q=80",
-    alt: "Community study session",
-    caption: "Weekend showcase",
-    category: "events",
-    pin: "short",
-  },
-  {
-    id: "13",
-    src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
-    alt: "Laptop and learning",
-    caption: "Digital board review",
-    category: "coaching",
-    pin: "medium",
-  },
-  {
-    id: "14",
-    src: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=900&q=80",
-    alt: "School campus exterior",
-    caption: "Partner school visit",
+    id: "g8",
+    src: unsplash("photo-1509062522246-3755977927d7"),
+    alt: "School campus activity",
+    caption: "Campus club day",
     category: "schools",
     pin: "tall",
   },
   {
-    id: "15",
-    src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80",
-    alt: "Child focused on activity",
-    caption: "Quiet calculation",
-    category: "kids",
-    pin: "medium",
+    id: "g9",
+    src: unsplash("photo-1586165368502-1bad197a6461"),
+    alt: "Chess pieces on a board",
+    caption: "Endgame precision",
+    category: "events",
+    pin: "short",
   },
   {
-    id: "16",
-    src: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=900&q=80",
-    alt: "Open book study",
-    caption: "Theory before tactics",
-    category: "events",
-    pin: "tall",
+    id: "g10",
+    src: unsplash("photo-1544716278-ca5e3f4abd8c"),
+    alt: "Open book beside focused study",
+    caption: "Study before the round",
+    category: "schools",
+    pin: "medium",
   },
 ];
 
@@ -196,8 +214,7 @@ export const articles: Article[] = [
     category: "Kids",
     date: "2026-03-12",
     readMinutes: 4,
-    image:
-      "https://images.unsplash.com/photo-1580894732444-8ae875adcd39?auto=format&fit=crop&w=1400&q=80",
+    image: unsplash("photo-1427504494785-3a9ca7044f45"),
     body: [
       "The first time a child sits across a chessboard, something soft and serious happens at once. Their eyes light up at the pieces. Then they ask the best question in the world: “Can I move this one?”",
       "At Hikaru Chess Elites, kids training is built around that curiosity. We do not drop a child into a wall of openings on day one. We start with names, stories, and little missions. The knight hops. The rook runs straight. The king is brave but careful. Suddenly the rules feel like a game again.",
@@ -214,8 +231,7 @@ export const articles: Article[] = [
     category: "Training",
     date: "2026-04-02",
     readMinutes: 5,
-    image:
-      "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=1400&q=80",
+    image: unsplash("photo-1516321318423-f06f85e504b3"),
     body: [
       "People often ask what a Hikaru session actually feels like. Here is the honest answer: structured, friendly, and a little competitive in the best way.",
       "We open with a warm-up. That might be a quick tactic, a “find the best move” board, or a short review of last week’s sticky moment. It wakes the brain without pressure.",
@@ -233,8 +249,7 @@ export const articles: Article[] = [
     category: "Motivation",
     date: "2026-05-18",
     readMinutes: 4,
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=80",
+    image: unsplash("photo-1434030216411-0b793f4b4173"),
     body: [
       "Hikaru Chess Elites started from a feeling many players know well. Chess grabs you. It teaches you to pause, plan, and try again after a loss. Once that fire is in you, you want to pass it on.",
       "Our passion is the game itself. The quiet tension before a move. The joy of a clean combination. The humility of blundering and coming back the next day sharper.",
@@ -252,8 +267,7 @@ export const articles: Article[] = [
     category: "About Hikaru",
     date: "2026-02-20",
     readMinutes: 3,
-    image:
-      "https://images.unsplash.com/photo-1560785496-3e4a7dd6d06d?auto=format&fit=crop&w=1400&q=80",
+    image: unsplash("photo-1518133910546-b6c2fb7d79e3"),
     body: [
       "Hikaru Chess Elites is a chess training family with a clear job. We help people learn the game properly, enjoy it deeply, and keep improving.",
       "We work with kids who are meeting the pieces for the first time. We partner with schools that want a club with structure, not chaos. We coach anyone who is interested, whether that means after-work lessons or weekend sharpening.",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
+import { aboutImage } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -14,8 +15,8 @@ export default function AboutPage() {
       <section className="mx-auto grid max-w-7xl gap-0 lg:grid-cols-2">
         <div className="relative min-h-[320px] lg:min-h-[70vh]">
           <Image
-            src="https://images.unsplash.com/photo-1560785496-3e4a7dd6d06d?auto=format&fit=crop&w=1600&q=80"
-            alt="Coach guiding a student"
+            src={aboutImage.src}
+            alt={aboutImage.alt}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
@@ -36,12 +37,18 @@ export default function AboutPage() {
             feel in focus, confidence, and competitive readiness.
           </p>
           <p className="mt-4 max-w-lg text-muted-foreground">
-            This prototype uses placeholder photography. Swap in your real
-            session photos and the site becomes your living portfolio.
+            From lakeside demos to school clubs, we train where the game can
+            grow in Kenya. Browse the gallery, then reach out when you are
+            ready.
           </p>
-          <Button render={<Link href="/contact" />} className="mt-8 w-fit">
-            Start a conversation
-          </Button>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button render={<Link href="/gallery" />} variant="outline">
+              View gallery
+            </Button>
+            <Button render={<Link href="/contact" />}>
+              Start a conversation
+            </Button>
+          </div>
         </div>
       </section>
     </div>

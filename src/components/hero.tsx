@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
-import { presenceLines } from "@/lib/content";
+import { heroImage, presenceLines } from "@/lib/content";
 import { useEffect, useState } from "react";
 
 export function Hero() {
@@ -21,11 +21,11 @@ export function Hero() {
   return (
     <section className="relative min-h-[100svh] overflow-hidden">
       <Image
-        src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=2400&q=80"
-        alt="Chess board atmosphere"
+        src={heroImage.src}
+        alt={heroImage.alt}
         fill
         priority
-        className="object-cover"
+        className="object-cover object-center"
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/25" />

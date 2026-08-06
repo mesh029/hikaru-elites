@@ -23,18 +23,22 @@ export default function ContactPage() {
           </p>
           <div className="mt-8 space-y-3 font-mono text-sm tracking-wide">
             <a
-              href="https://wa.me/254700000000"
-              className="block text-secondary hover:text-primary"
-              target="_blank"
-              rel="noreferrer"
-            >
-              WhatsApp · +254 700 000 000
-            </a>
-            <a
-              href="mailto:hello@hikaruchess.elites"
+              href="mailto:info@hikaru-chess-elites.online"
               className="block text-accent hover:text-primary"
             >
-              hello@hikaruchess.elites
+              info@hikaru-chess-elites.online
+            </a>
+            <a
+              href="mailto:hello@hikaru-chess-elites.online"
+              className="block text-secondary hover:text-primary"
+            >
+              hello@hikaru-chess-elites.online
+            </a>
+            <a
+              href="mailto:support@hikaru-chess-elites.online"
+              className="block text-muted-foreground hover:text-primary"
+            >
+              support@hikaru-chess-elites.online
             </a>
             <p className="text-muted-foreground">Nairobi · partner schools</p>
           </div>

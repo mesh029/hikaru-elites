@@ -41,7 +41,7 @@ export default function ProgramsPage() {
             <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-[480px]">
               <Image
                 src={program.image}
-                alt={program.title}
+                alt={program.imageAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -60,10 +60,7 @@ export default function ProgramsPage() {
                 <li>· Progress parents and schools can see</li>
                 <li>· Coaching that respects real schedules</li>
               </ul>
-              <Button
-                render={<Link href="/contact" />}
-                className="mt-8 w-fit"
-              >
+              <Button render={<Link href="/contact" />} className="mt-8 w-fit">
                 Inquire for {program.title.toLowerCase()}
               </Button>
             </div>

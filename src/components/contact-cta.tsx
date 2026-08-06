@@ -22,17 +22,11 @@ export function ContactCta() {
             Inquire now
           </Button>
           <Button
-            render={
-              <a
-                href="https://wa.me/254700000000"
-                target="_blank"
-                rel="noreferrer"
-              />
-            }
+            render={<a href="mailto:info@hikaru-chess-elites.online" />}
             variant="outline"
             size="lg"
           >
-            WhatsApp
+            Email us
           </Button>
         </div>
       </Reveal>

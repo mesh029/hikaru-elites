@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import { Reveal } from "@/components/reveal";
+import { momentImage } from "@/lib/content";
 
 export function MomentSection() {
   return (
@@ -10,8 +11,8 @@ export function MomentSection() {
       <div className="mx-auto grid max-w-7xl gap-0 lg:grid-cols-2">
         <Reveal className="relative min-h-[320px] lg:min-h-[520px]">
           <Image
-            src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1600&q=80"
-            alt="Youth training session"
+            src={momentImage.src}
+            alt={momentImage.alt}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
