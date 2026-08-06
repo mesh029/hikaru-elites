@@ -268,6 +268,38 @@ export function getArticle(slug: string) {
   return articles.find((article) => article.slug === slug);
 }
 
+export type Testimonial = {
+  id: string;
+  name: string;
+  role: string;
+  quote: string | null;
+  pendingLabel?: string;
+};
+
+export const testimonials: Testimonial[] = [
+  {
+    id: "nkanda",
+    name: "Nkanda Mwega",
+    role: "Professional chess trainer · Nairobi",
+    quote:
+      "Hikaru Chess Elites trains kids the way the game deserves to be taught. Clear lessons, real practice, and coaches who actually stay with a child until the idea clicks. Nairobi needs more of this energy.",
+  },
+  {
+    id: "zadock",
+    name: "Zadock Nyakundi",
+    role: "Professional chess player · Trainer",
+    quote:
+      "I have seen a lot of clubs start loud and fade fast. Hikaru is different. The sessions are structured, the kids stay hungry, and the standard keeps rising. That is how you grow strong players.",
+  },
+  {
+    id: "owili",
+    name: "Owili",
+    role: "President · Chess Kenya",
+    quote: null,
+    pendingLabel: "Testimonial coming soon",
+  },
+];
+
 export const presenceLines = [
   "Training this term in partner schools",
   "Open for new coaching slots",

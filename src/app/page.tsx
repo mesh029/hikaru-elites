@@ -4,6 +4,7 @@ import { GalleryCinema } from "@/components/gallery-cinema";
 import { Hero } from "@/components/hero";
 import { MomentSection } from "@/components/moment-section";
 import { ProgramsTriad } from "@/components/programs-triad";
+import { Testimonials } from "@/components/testimonials";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Hero />
       <ProgramsTriad />
       <MomentSection />
+      <Testimonials />
       <ArticlesTeaser />
       <GalleryCinema preview />
       <ContactCta />

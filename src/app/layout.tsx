@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   },
   description:
     "Chess training for kids, school programs, and coaching for anyone ready to improve.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
