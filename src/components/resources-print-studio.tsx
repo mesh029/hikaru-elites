@@ -67,7 +67,7 @@ export function ResourcesPrintStudio() {
             Print cards
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Pick a photo (or paste an image URL), then download an A3 card PDF
+            Pick a photo (or paste an image URL), then download an A5 card PDF
             for parents, schools, or events — the PDF is the designed card, not
             the raw photo.
           </p>
@@ -183,7 +183,7 @@ export function ResourcesPrintStudio() {
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
                     <p className="font-mono text-[10px] tracking-[0.3em] text-secondary uppercase">
-                      A3 card PDF · Front + back
+                      A5 card PDF · Front + back
                     </p>
                     <h2 className="mt-2 text-2xl font-semibold tracking-wide">
                       {card.title}
@@ -197,7 +197,7 @@ export function ResourcesPrintStudio() {
                   <div className="mt-6 flex flex-col gap-3">
                     <DownloadCardPdfButton
                       href={pdfHref}
-                      filenameHint={`hikaru-a3-${card.id}-${photo.id}.pdf`}
+                      filenameHint={`hikaru-a5-${card.id}-${photo.id}.pdf`}
                     />
                     <Button
                       render={
@@ -221,7 +221,7 @@ export function ResourcesPrintStudio() {
             Note
           </p>
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            Download card PDF builds a real A3 front + back PDF with your chosen
+            Download card PDF builds a real A5 front + back PDF with your chosen
             photo. Preview opens the live layout if you want to check it first.
           </p>
           <Button render={<Link href="/contact" />} className="mt-6">

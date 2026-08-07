@@ -102,7 +102,7 @@ export const navLinks = [
 
 export type PrintPhotoId = keyof typeof photos | (string & {});
 
-/** Photos available for A3 print cards (Sirv CDN). */
+/** Photos available for A5 print cards (Sirv CDN). */
 export const printPhotos = [
   {
     id: "boardCape",
@@ -263,7 +263,7 @@ export const printCards = [
     id: "parents" as const,
     title: "Parents",
     line: "Kids training that builds focus and confidence.",
-    body: "A3 card for families — what your child learns, how sessions run, and how you stay in the loop.",
+    body: "A5 card for families — what your child learns, how sessions run, and how you stay in the loop.",
     eyebrow: "Kids · Focus · Confidence",
     tagline:
       "Chess that builds patience, focus, and competitive calm — without killing the fun.",
@@ -306,7 +306,7 @@ export const printCards = [
     id: "kids" as const,
     title: "Kids",
     line: "First moves that stick for life.",
-    body: "A3 card for young players — fun missions, real games, and skills that grow with them.",
+    body: "A5 card for young players — fun missions, real games, and skills that grow with them.",
     eyebrow: "Play · Learn · Grow",
     tagline:
       "Learn the board like a game worth mastering — names, missions, and real matches.",
@@ -349,7 +349,7 @@ export const printCards = [
     id: "schools" as const,
     title: "Schools",
     line: "Campus programs that fit real timetables.",
-    body: "A3 card for heads, teachers, and clubs — structure, outcomes, and flexible delivery.",
+    body: "A5 card for heads, teachers, and clubs — structure, outcomes, and flexible delivery.",
     eyebrow: "Campus · Clubs · Terms",
     tagline:
       "We bring the board to your campus — structured programs that fit real timetables and real classrooms.",
@@ -392,7 +392,7 @@ export const printCards = [
     id: "coaching" as const,
     title: "Coaching",
     line: "Private pressure. Personal progress.",
-    body: "A3 card for serious improvers — one-to-one and small-group coaching with a clear plan.",
+    body: "A5 card for serious improvers — one-to-one and small-group coaching with a clear plan.",
     eyebrow: "1:1 · Small group · Progress",
     tagline:
       "Sharper calculation, honest feedback, and a plan built around your games.",
@@ -435,7 +435,7 @@ export const printCards = [
     id: "events" as const,
     title: "Events",
     line: "Full showcase for booths, fairs, and open days.",
-    body: "A3 card for community events — everything Hikaru offers in one clear piece.",
+    body: "A5 card for community events — everything Hikaru offers in one clear piece.",
     eyebrow: "Academy · Schools · Coaching",
     tagline: "We train minds. In schools. At the board.",
     frontMeta: "Meet us here",

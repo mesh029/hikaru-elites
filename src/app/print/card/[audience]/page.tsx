@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { audience } = await params;
   const card = printCards.find((item) => item.id === audience);
   return {
-    title: card ? `A3 Card · ${card.title}` : "A3 Card",
+    title: card ? `A5 Card · ${card.title}` : "A5 Card",
   };
 }
 

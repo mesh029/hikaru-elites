@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
   const slug =
     photo.id === "custom" ? "custom" : photo.id.replace(/[^a-z0-9-]/gi, "");
-  const filename = `hikaru-a3-${audience}-${slug}.pdf`;
+  const filename = `hikaru-a5-${audience}-${slug}.pdf`;
 
   try {
     const bytes = await buildPrintCardPdf({ audience, photo, origin });

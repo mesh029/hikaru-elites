@@ -13,7 +13,7 @@ type DownloadCardPdfButtonProps = {
 
 export function DownloadCardPdfButton({
   href,
-  filenameHint = "hikaru-a3-card.pdf",
+  filenameHint = "hikaru-a5-card.pdf",
   className,
 }: DownloadCardPdfButtonProps) {
   const [busy, setBusy] = useState(false);

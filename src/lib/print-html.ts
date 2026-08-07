@@ -37,7 +37,7 @@ body{display:block!important;min-height:0!important;height:auto!important;overfl
 }
 .hint{margin-left:auto;color:#a8a8a8;text-transform:none;letter-spacing:.06em}
 .sheet{
-  width:297mm;height:420mm;margin:1.5rem auto;position:relative;overflow:hidden;
+  width:148mm;height:210mm;margin:1.5rem auto;position:relative;overflow:hidden;
   background:#2c2c2c;box-shadow:0 12px 40px rgba(0,0,0,.55);
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
 }
@@ -45,37 +45,37 @@ body{display:block!important;min-height:0!important;height:auto!important;overfl
 .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,26,.97) 0%,rgba(26,26,26,.78) 32%,rgba(26,26,26,.25) 58%,rgba(26,26,26,.15) 100%)}
 .grid{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(to right,currentColor 1px,transparent 1px),linear-gradient(to bottom,currentColor 1px,transparent 1px);background-size:12.5% 12.5%}
-.content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:14mm;z-index:2}
-.eyebrow{font-family:"Source Code Pro",monospace;font-size:11pt;letter-spacing:.35em;text-transform:uppercase;color:#7cb342}
+.content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:8mm;z-index:2}
+.eyebrow{font-family:"Source Code Pro",monospace;font-size:7pt;letter-spacing:.28em;text-transform:uppercase;color:#7cb342}
 .eyebrow.muted{color:#a8a8a8}
-.wordmark{margin-top:8mm;font-size:72pt;font-weight:600;letter-spacing:.08em;line-height:.9;text-transform:uppercase;color:#e8e8e8}
-.sub{margin-top:3mm;font-size:14pt;letter-spacing:.42em;text-transform:uppercase;color:#a8a8a8}
-.tag{margin-top:8mm;max-width:180mm;font-size:16pt;line-height:1.35;color:rgba(232,232,232,.92)}
-.meta{margin-top:10mm;display:flex;flex-wrap:wrap;gap:4mm 8mm;font-family:"Source Code Pro",monospace;font-size:9pt;letter-spacing:.18em;text-transform:uppercase;color:#6ba3d4}
-.inner{flex:1;display:flex;flex-direction:column;padding:14mm;min-height:0;background:#2c2c2c}
-.head{border-bottom:1px solid #5c5c5c;padding-bottom:8mm}
-.title{margin-top:4mm;font-size:28pt;font-weight:600;letter-spacing:.04em;line-height:1.15;color:#e8e8e8}
-.lede{margin-top:4mm;max-width:210mm;font-size:12pt;line-height:1.5;color:#a8a8a8}
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:10mm;border:1px solid #5c5c5c}
-.pillar{padding:8mm 6mm;background:#3a3a3a;border-right:1px solid #5c5c5c;min-height:72mm}
+.wordmark{margin-top:3mm;font-size:34pt;font-weight:600;letter-spacing:.08em;line-height:.9;text-transform:uppercase;color:#e8e8e8}
+.sub{margin-top:1.5mm;font-size:8pt;letter-spacing:.35em;text-transform:uppercase;color:#a8a8a8}
+.tag{margin-top:3.5mm;max-width:120mm;font-size:9pt;line-height:1.35;color:rgba(232,232,232,.92)}
+.meta{margin-top:4mm;display:flex;flex-wrap:wrap;gap:2mm 5mm;font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.14em;text-transform:uppercase;color:#6ba3d4}
+.inner{flex:1;display:flex;flex-direction:column;padding:8mm;min-height:0;background:#2c2c2c}
+.head{border-bottom:1px solid #5c5c5c;padding-bottom:4mm}
+.title{margin-top:2mm;font-size:15pt;font-weight:600;letter-spacing:.04em;line-height:1.15;color:#e8e8e8}
+.lede{margin-top:2mm;max-width:130mm;font-size:8pt;line-height:1.4;color:#a8a8a8}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:4mm;border:1px solid #5c5c5c}
+.pillar{padding:3.5mm 2.5mm;background:#3a3a3a;border-right:1px solid #5c5c5c;min-height:38mm}
 .pillar:last-child{border-right:0}
-.pillar.focus{background:#424242;box-shadow:inset 0 0 0 2px #e23d2e}
-.plabel{font-family:"Source Code Pro",monospace;font-size:9pt;letter-spacing:.28em;text-transform:uppercase;color:#7cb342}
-.ptitle{margin-top:4mm;font-size:18pt;font-weight:600;letter-spacing:.06em;color:#e8e8e8}
-.pline{margin-top:3mm;font-size:11pt;color:#7cb342;line-height:1.35}
-.pbody{margin-top:4mm;font-size:10pt;line-height:1.45;color:#a8a8a8}
-.benefits{margin-top:10mm;list-style:none;display:grid;gap:3.5mm}
-.benefits li{font-family:"Source Code Pro",monospace;font-size:9.5pt;letter-spacing:.06em;text-transform:uppercase;color:#a8a8a8;padding-left:5mm;position:relative}
+.pillar.focus{background:#424242;box-shadow:inset 0 0 0 1.5px #e23d2e}
+.plabel{font-family:"Source Code Pro",monospace;font-size:6pt;letter-spacing:.2em;text-transform:uppercase;color:#7cb342}
+.ptitle{margin-top:1.5mm;font-size:9pt;font-weight:600;letter-spacing:.04em;color:#e8e8e8}
+.pline{margin-top:1mm;font-size:7pt;color:#7cb342;line-height:1.3}
+.pbody{margin-top:1.5mm;font-size:6.5pt;line-height:1.35;color:#a8a8a8}
+.benefits{margin-top:4mm;list-style:none;display:grid;gap:1.5mm}
+.benefits li{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.04em;text-transform:uppercase;color:#a8a8a8;padding-left:3.5mm;position:relative}
 .benefits li:before{content:"·";position:absolute;left:0;color:#e23d2e;font-weight:700}
-.cta{margin-top:auto;padding-top:10mm;border-top:1px solid #5c5c5c;display:grid;grid-template-columns:1fr auto;gap:8mm;align-items:end}
-.clabel{font-family:"Source Code Pro",monospace;font-size:9pt;letter-spacing:.28em;text-transform:uppercase;color:#e23d2e}
-.ctitle{margin-top:3mm;font-size:16pt;font-weight:600;color:#e8e8e8}
-.clinks{margin-top:4mm;font-size:11pt;line-height:1.65;color:#a8a8a8}
+.cta{margin-top:auto;padding-top:4mm;border-top:1px solid #5c5c5c;display:grid;grid-template-columns:1fr auto;gap:4mm;align-items:end}
+.clabel{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.2em;text-transform:uppercase;color:#e23d2e}
+.ctitle{margin-top:1.5mm;font-size:10pt;font-weight:600;color:#e8e8e8}
+.clinks{margin-top:2mm;font-size:7.5pt;line-height:1.5;color:#a8a8a8}
 .clinks strong{color:#6ba3d4;font-weight:500}
-.qr{width:34mm;height:34mm;border:1px solid #5c5c5c;background:#fff;padding:2mm;display:flex;align-items:center;justify-content:center}
+.qr{width:18mm;height:18mm;border:1px solid #5c5c5c;background:#fff;padding:1mm;display:flex;align-items:center;justify-content:center}
 .qr img{width:100%;height:100%;object-fit:contain}
-.foot{margin-top:6mm;font-family:"Source Code Pro",monospace;font-size:8pt;letter-spacing:.2em;text-transform:uppercase;color:#5c5c5c}
-@page{size:A3 portrait;margin:0}
+.foot{margin-top:3mm;font-family:"Source Code Pro",monospace;font-size:5.5pt;letter-spacing:.14em;text-transform:uppercase;color:#5c5c5c}
+@page{size:A5 portrait;margin:0}
 @media print{
   .nav,.no-print{display:none!important}
   html,body{background:#2c2c2c!important}
@@ -138,7 +138,7 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>A3 Card · ${escapeHtml(card.title)} · Hikaru Chess Elites</title>
+<title>A5 Card · ${escapeHtml(card.title)} · Hikaru Chess Elites</title>
 <style>${PRINT_CSS}</style>
 </head>
 <body>
@@ -150,7 +150,7 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
   <a href="?audience=coaching&${photoQ}">Coaching</a>
   <a href="?audience=events&${photoQ}">Events</a>
   <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
-  <span class="hint">A3 · front + back · ${escapeHtml(photo.label)}</span>
+  <span class="hint">A5 · front + back · ${escapeHtml(photo.label)}</span>
 </nav>
 
 <article class="sheet" aria-label="${escapeHtml(card.title)} card front">

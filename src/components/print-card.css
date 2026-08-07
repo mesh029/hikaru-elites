@@ -1,4 +1,4 @@
-/* A3 print card sheets — used by /print/card/[audience] */
+/* A5 print card sheets — used by /print/card/[audience] */
 .print-root {
   --print-bg: #2c2c2c;
   --print-fg: #e8e8e8;
@@ -8,9 +8,9 @@
   --print-primary: #e23d2e;
   --print-secondary: #7cb342;
   --print-accent: #6ba3d4;
-  --print-safe: 14mm;
-  --print-w: 297mm;
-  --print-h: 420mm;
+  --print-safe: 8mm;
+  --print-w: 148mm;
+  --print-h: 210mm;
   color: var(--print-fg);
   background: #111;
   min-height: 100vh;
@@ -144,9 +144,9 @@
 
 .print-eyebrow {
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 11pt;
+  font-size: 7pt;
   font-weight: 500;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--print-secondary);
 }
@@ -156,8 +156,8 @@
 }
 
 .print-wordmark {
-  margin-top: 8mm;
-  font-size: 72pt;
+  margin-top: 3mm;
+  font-size: 34pt;
   font-weight: 600;
   letter-spacing: 0.08em;
   line-height: 0.9;
@@ -166,30 +166,30 @@
 }
 
 .print-wordmark-sub {
-  margin-top: 3mm;
-  font-size: 14pt;
+  margin-top: 1.5mm;
+  font-size: 8pt;
   font-weight: 500;
-  letter-spacing: 0.42em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--print-muted);
 }
 
 .print-tagline {
-  margin-top: 8mm;
-  max-width: 180mm;
-  font-size: 16pt;
+  margin-top: 3.5mm;
+  max-width: 120mm;
+  font-size: 9pt;
   line-height: 1.35;
   color: rgba(232, 232, 232, 0.92);
 }
 
 .print-front-meta {
-  margin-top: 10mm;
+  margin-top: 4mm;
   display: flex;
   flex-wrap: wrap;
-  gap: 4mm 8mm;
+  gap: 2mm 5mm;
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 9pt;
-  letter-spacing: 0.18em;
+  font-size: 6.5pt;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--print-accent);
 }
@@ -206,12 +206,12 @@
 
 .print-back-header {
   border-bottom: 1px solid var(--print-border);
-  padding-bottom: 8mm;
+  padding-bottom: 4mm;
 }
 
 .print-back-title {
-  margin-top: 4mm;
-  font-size: 28pt;
+  margin-top: 2mm;
+  font-size: 15pt;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.15;
@@ -219,25 +219,25 @@
 }
 
 .print-back-lede {
-  margin-top: 4mm;
-  max-width: 210mm;
-  font-size: 12pt;
-  line-height: 1.5;
+  margin-top: 2mm;
+  max-width: 130mm;
+  font-size: 8pt;
+  line-height: 1.4;
   color: var(--print-muted);
 }
 
 .print-pillars {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 10mm;
+  margin-top: 4mm;
   border: 1px solid var(--print-border);
 }
 
 .print-pillar {
-  padding: 8mm 6mm;
+  padding: 3.5mm 2.5mm;
   background: var(--print-card);
   border-right: 1px solid var(--print-border);
-  min-height: 72mm;
+  min-height: 38mm;
 }
 
 .print-pillar:last-child {
@@ -246,54 +246,54 @@
 
 .print-pillar.is-focus {
   background: #424242;
-  box-shadow: inset 0 0 0 2px var(--print-primary);
+  box-shadow: inset 0 0 0 1.5px var(--print-primary);
 }
 
 .print-pillar-label {
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 9pt;
-  letter-spacing: 0.28em;
+  font-size: 6pt;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--print-secondary);
 }
 
 .print-pillar-title {
-  margin-top: 4mm;
-  font-size: 18pt;
+  margin-top: 1.5mm;
+  font-size: 9pt;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: var(--print-fg);
 }
 
 .print-pillar-line {
-  margin-top: 3mm;
-  font-size: 11pt;
+  margin-top: 1mm;
+  font-size: 7pt;
   color: var(--print-secondary);
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .print-pillar-body {
-  margin-top: 4mm;
-  font-size: 10pt;
-  line-height: 1.45;
+  margin-top: 1.5mm;
+  font-size: 6.5pt;
+  line-height: 1.35;
   color: var(--print-muted);
 }
 
 .print-benefits {
-  margin-top: 10mm;
+  margin-top: 4mm;
   list-style: none;
   display: grid;
-  gap: 3.5mm;
+  gap: 1.5mm;
   padding: 0;
 }
 
 .print-benefits li {
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 9.5pt;
-  letter-spacing: 0.06em;
+  font-size: 6.5pt;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--print-muted);
-  padding-left: 5mm;
+  padding-left: 3.5mm;
   position: relative;
 }
 
@@ -307,34 +307,34 @@
 
 .print-cta-block {
   margin-top: auto;
-  padding-top: 10mm;
+  padding-top: 4mm;
   border-top: 1px solid var(--print-border);
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 8mm;
+  gap: 4mm;
   align-items: end;
 }
 
 .print-cta-label {
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 9pt;
-  letter-spacing: 0.28em;
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--print-primary);
 }
 
 .print-cta-title {
-  margin-top: 3mm;
-  font-size: 16pt;
+  margin-top: 1.5mm;
+  font-size: 10pt;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--print-fg);
 }
 
 .print-cta-links {
-  margin-top: 4mm;
-  font-size: 11pt;
-  line-height: 1.65;
+  margin-top: 2mm;
+  font-size: 7.5pt;
+  line-height: 1.5;
   color: var(--print-muted);
 }
 
@@ -344,11 +344,11 @@
 }
 
 .print-qr-slot {
-  width: 34mm;
-  height: 34mm;
+  width: 18mm;
+  height: 18mm;
   border: 1px solid var(--print-border);
   background: #fff;
-  padding: 2mm;
+  padding: 1mm;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -362,16 +362,16 @@
 }
 
 .print-back-foot {
-  margin-top: 6mm;
+  margin-top: 3mm;
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
-  font-size: 8pt;
-  letter-spacing: 0.2em;
+  font-size: 5.5pt;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--print-border);
 }
 
 @page {
-  size: A3 portrait;
+  size: A5 portrait;
   margin: 0;
 }
 

@@ -56,7 +56,7 @@ export function PrintCardSheets({
         >
           Preview / print
         </a>
-        <span className="print-hint">A3 · front + back · {photo.label}</span>
+        <span className="print-hint">A5 · front + back · {photo.label}</span>
       </nav>
 
       <article className="print-sheet print-sheet--front" aria-label={`${card.title} card front`}>

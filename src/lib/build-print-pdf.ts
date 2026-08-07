@@ -7,10 +7,10 @@ import {
   type PrintPhoto,
 } from "@/lib/content";
 
-/** A3 portrait in PDF points (1pt = 1/72") */
-const A3_W = 841.89;
-const A3_H = 1190.55;
-const MARGIN = 42;
+/** A5 portrait in PDF points (148mm x 210mm) */
+const PAGE_W = 419.53;
+const PAGE_H = 595.28;
+const MARGIN = 22;
 
 const COLORS = {
   bg: rgb(0.173, 0.173, 0.173),
@@ -24,7 +24,6 @@ const COLORS = {
   border: rgb(0.36, 0.36, 0.36),
 };
 
-/** Helvetica/WinAnsi-safe text */
 function safeText(value: string) {
   return value
     .replaceAll("—", "-")
@@ -110,22 +109,26 @@ async function embedRemoteImage(pdf: PDFDocument, url: string) {
     try {
       return await pdf.embedJpg(raw);
     } catch {
-      // fall through to sharp conversion
+      // fall through
     }
   }
   if (kind === "png") {
     try {
       return await pdf.embedPng(raw);
     } catch {
-      // fall through to sharp conversion
+      // fall through
     }
   }
 
-  // WebP / AVIF / GIF / odd encodings → JPEG for pdf-lib
   try {
     const jpeg = await sharp(Buffer.from(raw))
       .rotate()
-      .resize({ width: 2400, height: 3200, fit: "inside", withoutEnlargement: true })
+      .resize({
+        width: 1600,
+        height: 2200,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
       .jpeg({ quality: 88, mozjpeg: true })
       .toBuffer();
     return pdf.embedJpg(jpeg);
@@ -144,24 +147,23 @@ function drawCoverImage(
   objectPosition: string
 ) {
   const imgAspect = image.width / image.height;
-  const pageAspect = A3_W / A3_H;
+  const pageAspect = PAGE_W / PAGE_H;
   let drawW: number;
   let drawH: number;
 
   if (imgAspect > pageAspect) {
-    drawH = A3_H;
+    drawH = PAGE_H;
     drawW = drawH * imgAspect;
   } else {
-    drawW = A3_W;
+    drawW = PAGE_W;
     drawH = drawW / imgAspect;
   }
 
   const [posXRaw, posYRaw] = objectPosition.split(/\s+/);
   const posX = Number.parseFloat(posXRaw) || 50;
   const posY = Number.parseFloat(posYRaw) || 50;
-  // CSS object-position % is from top-left; PDF y is from bottom-left.
-  const x = ((50 - posX) / 100) * (drawW - A3_W) - (drawW - A3_W) / 2;
-  const y = ((posY - 50) / 100) * (drawH - A3_H) - (drawH - A3_H) / 2;
+  const x = ((50 - posX) / 100) * (drawW - PAGE_W) - (drawW - PAGE_W) / 2;
+  const y = ((posY - 50) / 100) * (drawH - PAGE_H) - (drawH - PAGE_H) / 2;
 
   page.drawImage(image, { x, y, width: drawW, height: drawH });
 }
@@ -186,143 +188,141 @@ export async function buildPrintCardPdf(options: {
   }
 
   // —— FRONT ——
-  const front = pdf.addPage([A3_W, A3_H]);
+  const front = pdf.addPage([PAGE_W, PAGE_H]);
   front.drawRectangle({
     x: 0,
     y: 0,
-    width: A3_W,
-    height: A3_H,
+    width: PAGE_W,
+    height: PAGE_H,
     color: COLORS.bg,
   });
   drawCoverImage(front, photoImage, photo.objectPosition);
 
-  for (let i = 0; i < 32; i++) {
-    const t = i / 31;
+  for (let i = 0; i < 28; i++) {
+    const t = i / 27;
     front.drawRectangle({
       x: 0,
-      y: (i * A3_H * 0.58) / 32,
-      width: A3_W,
-      height: (A3_H * 0.58) / 32 + 1.5,
+      y: (i * PAGE_H * 0.56) / 28,
+      width: PAGE_W,
+      height: (PAGE_H * 0.56) / 28 + 1,
       color: COLORS.bg,
       opacity: 0.95 * (1 - t),
     });
   }
 
-  // Text stack sits in the lower third (bottom-up layout)
-  let y = 210;
   front.drawText(safeText(card.frontMeta).toUpperCase(), {
     x: MARGIN,
-    y: 56,
-    size: 10,
+    y: 28,
+    size: 7,
     font,
     color: COLORS.accent,
   });
   front.drawText("hikaru-chess-elites.online", {
-    x: MARGIN + 160,
-    y: 56,
-    size: 10,
+    x: MARGIN + 95,
+    y: 28,
+    size: 7,
     font,
     color: COLORS.accent,
   });
 
-  const tagLines = wrapText(card.tagline, font, 14, A3_W - MARGIN * 2 - 40);
-  y = 90;
+  const tagLines = wrapText(card.tagline, font, 9, PAGE_W - MARGIN * 2 - 12);
+  let y = 46;
   for (let i = tagLines.length - 1; i >= 0; i--) {
     front.drawText(tagLines[i], {
       x: MARGIN,
       y,
-      size: 14,
+      size: 9,
       font,
       color: COLORS.fg,
     });
-    y += 18;
+    y += 12;
   }
 
-  y += 14;
+  y += 8;
   front.drawText("CHESS ELITES", {
     x: MARGIN,
     y,
-    size: 13,
+    size: 8,
     font,
     color: COLORS.muted,
   });
 
-  y += 28;
+  y += 18;
   front.drawText("HIKARU", {
     x: MARGIN,
     y,
-    size: 64,
+    size: 34,
     font: fontBold,
     color: COLORS.fg,
   });
 
-  y += 56;
+  y += 30;
   front.drawText(safeText(card.eyebrow).toUpperCase(), {
     x: MARGIN,
     y,
-    size: 11,
+    size: 7,
     font: fontBold,
     color: COLORS.secondary,
   });
 
   // —— BACK ——
-  const back = pdf.addPage([A3_W, A3_H]);
+  const back = pdf.addPage([PAGE_W, PAGE_H]);
   back.drawRectangle({
     x: 0,
     y: 0,
-    width: A3_W,
-    height: A3_H,
+    width: PAGE_W,
+    height: PAGE_H,
     color: COLORS.bg,
   });
 
-  let by = A3_H - MARGIN - 16;
+  let by = PAGE_H - MARGIN - 8;
   back.drawText(safeText(card.backEyebrow).toUpperCase(), {
     x: MARGIN,
     y: by,
-    size: 11,
+    size: 7,
     font: fontBold,
     color: COLORS.muted,
   });
 
-  by -= 38;
-  for (const line of wrapText(card.backTitle, fontBold, 28, A3_W - MARGIN * 2)) {
+  by -= 20;
+  for (const line of wrapText(card.backTitle, fontBold, 15, PAGE_W - MARGIN * 2)) {
     back.drawText(line, {
       x: MARGIN,
       y: by,
-      size: 28,
+      size: 15,
       font: fontBold,
       color: COLORS.fg,
     });
-    by -= 34;
+    by -= 18;
   }
 
-  by -= 6;
-  for (const line of wrapText(card.backLede, font, 12, A3_W - MARGIN * 2)) {
+  by -= 4;
+  for (const line of wrapText(card.backLede, font, 8, PAGE_W - MARGIN * 2)) {
     back.drawText(line, {
       x: MARGIN,
       y: by,
-      size: 12,
+      size: 8,
       font,
       color: COLORS.muted,
     });
-    by -= 17;
+    by -= 11;
   }
 
-  by -= 18;
+  by -= 10;
   back.drawRectangle({
     x: MARGIN,
     y: by,
-    width: A3_W - MARGIN * 2,
+    width: PAGE_W - MARGIN * 2,
     height: 1,
     color: COLORS.border,
   });
 
-  by -= 18;
-  const pillarGap = 10;
+  by -= 10;
+  const pillarGap = 6;
   const pillarCount = card.pillars.length;
   const pillarW =
-    (A3_W - MARGIN * 2 - pillarGap * (pillarCount - 1)) / pillarCount;
-  const pillarH = 210;
+    (PAGE_W - MARGIN * 2 - pillarGap * (pillarCount - 1)) / pillarCount;
+  const pillarH = 118;
   const pillarBottom = by - pillarH;
 
   card.pillars.forEach((pillar, index) => {
@@ -334,147 +334,144 @@ export async function buildPrintCardPdf(options: {
       height: pillarH,
       color: COLORS.card,
       borderColor: pillar.focus ? COLORS.primary : COLORS.border,
-      borderWidth: pillar.focus ? 2.5 : 1,
+      borderWidth: pillar.focus ? 1.5 : 0.75,
     });
 
-    let py = pillarBottom + pillarH - 26;
+    let py = pillarBottom + pillarH - 14;
     back.drawText(safeText(pillar.label).toUpperCase(), {
-      x: px + 12,
+      x: px + 6,
+      y: py,
+      size: 6,
+      font: fontBold,
+      color: COLORS.secondary,
+    });
+    py -= 13;
+    back.drawText(safeText(pillar.title), {
+      x: px + 6,
       y: py,
       size: 9,
       font: fontBold,
-      color: COLORS.secondary,
-    });
-    py -= 24;
-    back.drawText(safeText(pillar.title), {
-      x: px + 12,
-      y: py,
-      size: 15,
-      font: fontBold,
       color: COLORS.fg,
     });
-    py -= 20;
+    py -= 11;
     back.drawText(safeText(pillar.line), {
-      x: px + 12,
+      x: px + 6,
       y: py,
-      size: 10,
+      size: 6.5,
       font,
       color: COLORS.secondary,
     });
-    py -= 18;
-    for (const line of wrapText(pillar.body, font, 9.5, pillarW - 24).slice(
+    py -= 10;
+    for (const line of wrapText(pillar.body, font, 6.5, pillarW - 12).slice(
       0,
-      9
+      7
     )) {
       back.drawText(line, {
-        x: px + 12,
+        x: px + 6,
         y: py,
-        size: 9.5,
+        size: 6.5,
         font,
         color: COLORS.muted,
       });
-      py -= 13;
+      py -= 8.5;
     }
   });
 
-  by = pillarBottom - 26;
-  for (const benefit of card.benefits) {
+  by = pillarBottom - 14;
+  for (const benefit of card.benefits.slice(0, 5)) {
     back.drawText("-", {
       x: MARGIN,
       y: by,
-      size: 11,
+      size: 8,
       font: fontBold,
       color: COLORS.primary,
     });
     for (const line of wrapText(
       benefit.toUpperCase(),
       font,
-      9.5,
-      A3_W - MARGIN * 2 - 24
+      6.5,
+      PAGE_W - MARGIN * 2 - 70
     )) {
       back.drawText(line, {
-        x: MARGIN + 14,
+        x: MARGIN + 10,
         y: by,
-        size: 9.5,
+        size: 6.5,
         font,
         color: COLORS.muted,
       });
-      by -= 14;
+      by -= 9;
     }
-    by -= 4;
+    by -= 2;
   }
 
-  by -= 12;
+  by -= 8;
   back.drawRectangle({
     x: MARGIN,
     y: by,
-    width: A3_W - MARGIN * 2,
+    width: PAGE_W - MARGIN * 2 - 70,
     height: 1,
     color: COLORS.border,
   });
 
-  by -= 26;
+  by -= 14;
   back.drawText("NEXT STEP", {
+    x: MARGIN,
+    y: by,
+    size: 7,
+    font: fontBold,
+    color: COLORS.primary,
+  });
+  by -= 13;
+  back.drawText(safeText(card.ctaTitle), {
     x: MARGIN,
     y: by,
     size: 10,
     font: fontBold,
-    color: COLORS.primary,
-  });
-  by -= 22;
-  back.drawText(safeText(card.ctaTitle), {
-    x: MARGIN,
-    y: by,
-    size: 15,
-    font: fontBold,
     color: COLORS.fg,
   });
-  by -= 20;
+  by -= 12;
   back.drawText("hikaru-chess-elites.online", {
     x: MARGIN,
     y: by,
-    size: 11,
+    size: 7.5,
     font,
     color: COLORS.accent,
   });
-  by -= 16;
+  by -= 10;
   back.drawText("info@hikaru-chess-elites.online", {
     x: MARGIN,
     y: by,
-    size: 11,
+    size: 7.5,
     font,
     color: COLORS.muted,
   });
 
   if (qrImage) {
-    const qrSize = 88;
+    const qrSize = 48;
     back.drawRectangle({
-      x: A3_W - MARGIN - qrSize - 8,
-      y: MARGIN + 22,
-      width: qrSize + 8,
-      height: qrSize + 8,
+      x: PAGE_W - MARGIN - qrSize - 4,
+      y: MARGIN + 14,
+      width: qrSize + 4,
+      height: qrSize + 4,
       color: COLORS.white,
       borderColor: COLORS.border,
-      borderWidth: 1,
+      borderWidth: 0.75,
     });
     back.drawImage(qrImage, {
-      x: A3_W - MARGIN - qrSize - 4,
-      y: MARGIN + 26,
+      x: PAGE_W - MARGIN - qrSize - 2,
+      y: MARGIN + 16,
       width: qrSize,
       height: qrSize,
     });
   }
 
-  back.drawText(
-    "HIKARU CHESS ELITES - WE TRAIN MINDS. IN SCHOOLS. AT THE BOARD.",
-    {
-      x: MARGIN,
-      y: MARGIN,
-      size: 8,
-      font,
-      color: COLORS.border,
-    }
-  );
+  back.drawText("HIKARU CHESS ELITES - WE TRAIN MINDS. IN SCHOOLS. AT THE BOARD.", {
+    x: MARGIN,
+    y: MARGIN,
+    size: 5.5,
+    font,
+    color: COLORS.border,
+  });
 
   return pdf.save();
 }
