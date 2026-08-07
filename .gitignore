@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local print source photos (use Sirv URLs in production)
+/chess image.jpg
+/chess images 2.jpg
+/hikaru-chess-elites.png
+/print/
+/public/print/*.pdf
+/public/print/assets/chess-image.jpg
+/public/print/a3-print.css
+

@@ -30,6 +30,11 @@ function sirvUrl(file: string, query = "w=1600&q=80") {
   return `${sirv.host}${sirv.folder}/${file}?${query}`;
 }
 
+/** Full-resolution Sirv URL for print / download */
+function sirvPrintUrl(file: string) {
+  return sirvUrl(file, "w=2400&q=90");
+}
+
 function unsplash(id: string, w = 1600) {
   return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 }
@@ -64,6 +69,10 @@ export const photos = {
     src: sirvUrl("IMG-20250722-WA0177.jpg"),
     alt: "Coach with chess set by the water",
   },
+  boardCape: {
+    src: sirvUrl("IMG-20250722-WA0224.jpg"),
+    alt: "Coach with roll-up chess board by the water",
+  },
   outdoorSession: {
     src: sirvUrl("IMG-20250727-WA0042.jpg"),
     alt: "Outdoor chess session in Kenya",
@@ -86,9 +95,191 @@ export const navLinks = [
   { href: "/programs", label: "Programs" },
   { href: "/gallery", label: "Gallery" },
   { href: "/articles", label: "Articles" },
+  { href: "/resources", label: "Resources" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;
+
+export type PrintPhotoId = keyof typeof photos | (string & {});
+
+/** Photos available for A3 print cards (Sirv CDN). */
+export const printPhotos = [
+  {
+    id: "boardCape",
+    file: "IMG-20250722-WA0224.jpg",
+    label: "Board cape · lakeside",
+    alt: photos.boardCape.alt,
+    src: sirvPrintUrl("IMG-20250722-WA0224.jpg"),
+    thumb: sirvUrl("IMG-20250722-WA0224.jpg", "w=600&q=75"),
+    objectPosition: "52% 28%",
+  },
+  {
+    id: "kidsSession",
+    file: "IMG-20250727-WA0078.jpg",
+    label: "Kids session",
+    alt: photos.kidsSession.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0078.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0078.jpg", "w=600&q=75"),
+    objectPosition: "45% 20%",
+  },
+  {
+    id: "teachingBoard",
+    file: "IMG-20250722-WA0166.jpg",
+    label: "Teaching board",
+    alt: photos.teachingBoard.alt,
+    src: sirvPrintUrl("IMG-20250722-WA0166.jpg"),
+    thumb: sirvUrl("IMG-20250722-WA0166.jpg", "w=600&q=75"),
+    objectPosition: "50% 30%",
+  },
+  {
+    id: "demoBoard",
+    file: "IMG-20250722-WA0164.jpg",
+    label: "Demo board",
+    alt: photos.demoBoard.alt,
+    src: sirvPrintUrl("IMG-20250722-WA0164.jpg"),
+    thumb: sirvUrl("IMG-20250722-WA0164.jpg", "w=600&q=75"),
+    objectPosition: "50% 25%",
+  },
+  {
+    id: "lakesideCoach",
+    file: "IMG-20250722-WA0177.jpg",
+    label: "Lakeside coach",
+    alt: photos.lakesideCoach.alt,
+    src: sirvPrintUrl("IMG-20250722-WA0177.jpg"),
+    thumb: sirvUrl("IMG-20250722-WA0177.jpg", "w=600&q=75"),
+    objectPosition: "50% 30%",
+  },
+  {
+    id: "focusedPlay",
+    file: "IMG-20250727-WA0088.jpg",
+    label: "Focused play",
+    alt: photos.focusedPlay.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0088.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0088.jpg", "w=600&q=75"),
+    objectPosition: "50% 25%",
+  },
+  {
+    id: "outdoorSession",
+    file: "IMG-20250727-WA0042.jpg",
+    label: "Outdoor session",
+    alt: photos.outdoorSession.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0042.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0042.jpg", "w=600&q=75"),
+    objectPosition: "50% 30%",
+  },
+  {
+    id: "groupPlay",
+    file: "IMG-20250727-WA0048.jpg",
+    label: "Group play",
+    alt: photos.groupPlay.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0048.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0048.jpg", "w=600&q=75"),
+    objectPosition: "50% 35%",
+  },
+  {
+    id: "boardCircle",
+    file: "IMG-20250727-WA0069.jpg",
+    label: "Board circle",
+    alt: photos.boardCircle.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0069.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0069.jpg", "w=600&q=75"),
+    objectPosition: "50% 30%",
+  },
+  {
+    id: "sideTable",
+    file: "IMG-20250727-WA0084.jpg",
+    label: "Side table",
+    alt: photos.sideTable.alt,
+    src: sirvPrintUrl("IMG-20250727-WA0084.jpg"),
+    thumb: sirvUrl("IMG-20250727-WA0084.jpg", "w=600&q=75"),
+    objectPosition: "50% 30%",
+  },
+] as const;
+
+export type PrintPhoto = (typeof printPhotos)[number];
+export type PrintCardAudience = "parents" | "schools" | "events";
+
+export const DEFAULT_PRINT_PHOTO_ID = "boardCape" as const;
+
+export function getPrintPhoto(id?: string | null): PrintPhoto {
+  return (
+    printPhotos.find((photo) => photo.id === id) ??
+    printPhotos.find((photo) => photo.id === DEFAULT_PRINT_PHOTO_ID) ??
+    printPhotos[0]
+  );
+}
+
+export const printCards = [
+  {
+    id: "parents" as const,
+    title: "Parents",
+    line: "Kids training that builds focus and confidence.",
+    body: "A3 double-sided card for families — first moves that stick for life.",
+    eyebrow: "Kids · Focus · Confidence",
+    tagline:
+      "Chess that builds patience, focus, and competitive calm — without killing the fun.",
+    frontMeta: "Kids training",
+    backEyebrow: "For parents",
+    backTitle: "First moves that stick for life",
+    backLede:
+      "Age-ready training that helps your child think ahead, stay present, and grow confidence at the board — with structure you can see.",
+    focusPillar: "kids" as const,
+    benefits: [
+      "Focus, patience, and sportsmanship that carry past the board",
+      "Clear session structure — not random free play",
+      "Progress parents can see and talk about at home",
+      "Coaching that respects real family schedules",
+    ],
+    ctaTitle: "Inquire for kids training",
+  },
+  {
+    id: "schools" as const,
+    title: "Schools",
+    line: "Campus programs that fit real timetables.",
+    body: "A3 double-sided card for administrators — clubs, terms, and partnerships.",
+    eyebrow: "Academy · Campus · Clubs",
+    tagline:
+      "We bring the board to your campus — structured programs that fit real timetables and real classrooms.",
+    frontMeta: "School programs",
+    backEyebrow: "For schools & administrators",
+    backTitle: "Chess that fits your timetable",
+    backLede:
+      "Structured school programs, club setups, and term-long training — delivered with clear session design and outcomes staff can stand behind.",
+    focusPillar: "schools" as const,
+    benefits: [
+      "Programs designed for school days — not weekend-only hobby clubs",
+      "Clear session structure teachers and heads can observe",
+      "Progress schools can report to parents with confidence",
+      "Flexible setups: clubs, term blocks, or demo days",
+    ],
+    ctaTitle: "Partner with Hikaru",
+  },
+  {
+    id: "events" as const,
+    title: "Events",
+    line: "Full showcase for booths, fairs, and open days.",
+    body: "A3 double-sided card covering Kids, Schools, and Coaching in one piece.",
+    eyebrow: "Academy · Schools · Coaching",
+    tagline: "We train minds. In schools. At the board.",
+    frontMeta: "Meet us here",
+    backEyebrow: "What we do",
+    backTitle: "Three ways to train with Hikaru",
+    backLede:
+      "Whether you are a parent, a school, or a player chasing sharper calculation — there is a Hikaru path for you. Start a conversation today.",
+    focusPillar: null,
+    benefits: [
+      "Clear session structure every time we meet the board",
+      "Progress parents and schools can see",
+      "Coaching that respects real schedules",
+      "Community sessions, demos, and match days",
+    ],
+    ctaTitle: "Talk to us at this event",
+  },
+] as const;
+
+export function getPrintCard(audience: string) {
+  return printCards.find((card) => card.id === audience) ?? printCards[0];
+}
 
 export const programs = [
   {

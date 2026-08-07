@@ -1,0 +1,47 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import { PrintCardSheets } from "@/components/print-card-sheets";
+import {
+  getPrintPhoto,
+  printCards,
+  type PrintCardAudience,
+} from "@/lib/content";
+
+type PageProps = {
+  params: Promise<{ audience: string }>;
+  searchParams: Promise<{ photo?: string; print?: string }>;
+};
+
+const audiences = new Set(printCards.map((card) => card.id));
+
+export async function generateStaticParams() {
+  return printCards.map((card) => ({ audience: card.id }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { audience } = await params;
+  const card = printCards.find((item) => item.id === audience);
+  return {
+    title: card ? `A3 Card · ${card.title}` : "A3 Card",
+  };
+}
+
+export default async function PrintCardPage({ params, searchParams }: PageProps) {
+  const { audience } = await params;
+  const query = await searchParams;
+
+  if (!audiences.has(audience as PrintCardAudience)) {
+    notFound();
+  }
+
+  const photo = getPrintPhoto(query.photo);
+
+  return (
+    <PrintCardSheets
+      audience={audience as PrintCardAudience}
+      photo={photo}
+      autoprint={query.print === "1"}
+    />
+  );
+}
