@@ -41,8 +41,10 @@ export async function GET(request: Request) {
     console.error("PDF generation failed:", error);
     return NextResponse.json(
       {
-        error: "Could not generate card PDF",
-        detail: error instanceof Error ? error.message : "Unknown error",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Could not generate card PDF",
       },
       { status: 500 }
     );

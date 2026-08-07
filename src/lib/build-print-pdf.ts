@@ -1,4 +1,5 @@
 import { PDFDocument, PDFImage, rgb, StandardFonts } from "pdf-lib";
+import sharp from "sharp";
 
 import {
   getPrintCard,
@@ -59,22 +60,81 @@ function wrapText(
   return lines;
 }
 
+function sniffImageKind(bytes: Uint8Array, contentType: string, url: string) {
+  const type = contentType.toLowerCase();
+  const lowerUrl = url.toLowerCase();
+  if (
+    type.includes("jpeg") ||
+    type.includes("jpg") ||
+    lowerUrl.includes(".jpg") ||
+    lowerUrl.includes(".jpeg") ||
+    (bytes[0] === 0xff && bytes[1] === 0xd8)
+  ) {
+    return "jpeg" as const;
+  }
+  if (
+    type.includes("png") ||
+    lowerUrl.includes(".png") ||
+    (bytes[0] === 0x89 && bytes[1] === 0x50)
+  ) {
+    return "png" as const;
+  }
+  return "other" as const;
+}
+
 async function embedRemoteImage(pdf: PDFDocument, url: string) {
   const res = await fetch(url, {
-    headers: { Accept: "image/*" },
+    headers: {
+      Accept: "image/jpeg,image/png,image/webp,image/*,*/*",
+      "User-Agent":
+        "HikaruChessElitesBot/1.0 (+https://hikaru-chess-elites.online)",
+    },
+    redirect: "follow",
   });
-  if (!res.ok) throw new Error(`Failed to fetch image (${res.status})`);
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  const contentType = (res.headers.get("content-type") ?? "").toLowerCase();
-  const lowerUrl = url.toLowerCase();
 
-  if (contentType.includes("png") || lowerUrl.includes(".png")) {
-    return pdf.embedPng(bytes);
+  if (!res.ok) {
+    throw new Error(
+      `Could not fetch image (${res.status}). The host may block downloads - try a direct JPG/PNG link or a Sirv URL.`
+    );
   }
+
+  const raw = new Uint8Array(await res.arrayBuffer());
+  if (raw.byteLength < 32) {
+    throw new Error("Image download was empty or invalid.");
+  }
+
+  const contentType = res.headers.get("content-type") ?? "";
+  const kind = sniffImageKind(raw, contentType, url);
+
+  if (kind === "jpeg") {
+    try {
+      return await pdf.embedJpg(raw);
+    } catch {
+      // fall through to sharp conversion
+    }
+  }
+  if (kind === "png") {
+    try {
+      return await pdf.embedPng(raw);
+    } catch {
+      // fall through to sharp conversion
+    }
+  }
+
+  // WebP / AVIF / GIF / odd encodings → JPEG for pdf-lib
   try {
-    return await pdf.embedJpg(bytes);
-  } catch {
-    return pdf.embedPng(bytes);
+    const jpeg = await sharp(Buffer.from(raw))
+      .rotate()
+      .resize({ width: 2400, height: 3200, fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 88, mozjpeg: true })
+      .toBuffer();
+    return pdf.embedJpg(jpeg);
+  } catch (error) {
+    throw new Error(
+      `Unsupported image format for PDF (need JPG/PNG/WebP we can convert). ${
+        error instanceof Error ? error.message : ""
+      }`.trim()
+    );
   }
 }
 
