@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 import type { PrintCardAudience, PrintPhoto } from "@/lib/content";
-import { getPrintCard, programs } from "@/lib/content";
+import { getPrintCard } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 import "./print-card.css";
@@ -45,7 +45,9 @@ export function PrintCardSheets({
       <nav className="print-screen-nav no-print">
         <Link href="/resources">← Resources</Link>
         <Link href={`/print/card/parents?${photoQuery}`}>Parents</Link>
+        <Link href={`/print/card/kids?${photoQuery}`}>Kids</Link>
         <Link href={`/print/card/schools?${photoQuery}`}>Schools</Link>
+        <Link href={`/print/card/coaching?${photoQuery}`}>Coaching</Link>
         <Link href={`/print/card/events?${photoQuery}`}>Events</Link>
         <a className="print-download-btn" href={pdfHref}>
           Download card PDF
@@ -87,28 +89,17 @@ export function PrintCardSheets({
           </header>
 
           <div className="print-pillars">
-            {programs.map((program, index) => {
-              const label =
-                card.focusPillar === null
-                  ? String(index + 1).padStart(2, "0")
-                  : card.focusPillar === program.id
-                    ? "Focus"
-                    : "Also offer";
-              return (
-                <section
-                  key={program.id}
-                  className={cn(
-                    "print-pillar",
-                    card.focusPillar === program.id && "is-focus"
-                  )}
-                >
-                  <p className="print-pillar-label">{label}</p>
-                  <h3 className="print-pillar-title">{program.title}</h3>
-                  <p className="print-pillar-line">{program.line}</p>
-                  <p className="print-pillar-body">{program.body}</p>
-                </section>
-              );
-            })}
+            {card.pillars.map((pillar) => (
+              <section
+                key={pillar.title}
+                className={cn("print-pillar", pillar.focus && "is-focus")}
+              >
+                <p className="print-pillar-label">{pillar.label}</p>
+                <h3 className="print-pillar-title">{pillar.title}</h3>
+                <p className="print-pillar-line">{pillar.line}</p>
+                <p className="print-pillar-body">{pillar.body}</p>
+              </section>
+            ))}
           </div>
 
           <ul className="print-benefits">

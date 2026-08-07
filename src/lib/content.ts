@@ -206,8 +206,6 @@ export type PrintPhoto = {
   objectPosition: string;
 };
 
-export type PrintCardAudience = "parents" | "schools" | "events";
-
 export const DEFAULT_PRINT_PHOTO_ID = "boardCape" as const;
 
 export function getPrintPhoto(id?: string | null): PrintPhoto {
@@ -252,73 +250,232 @@ export function resolvePrintPhoto(options: {
   return getPrintPhoto(options.photo);
 }
 
+export type PrintCardPillar = {
+  label: string;
+  title: string;
+  line: string;
+  body: string;
+  focus?: boolean;
+};
+
 export const printCards = [
   {
     id: "parents" as const,
     title: "Parents",
     line: "Kids training that builds focus and confidence.",
-    body: "A3 double-sided card for families — first moves that stick for life.",
+    body: "A3 card for families — what your child learns, how sessions run, and how you stay in the loop.",
     eyebrow: "Kids · Focus · Confidence",
     tagline:
       "Chess that builds patience, focus, and competitive calm — without killing the fun.",
-    frontMeta: "Kids training",
-    backEyebrow: "For parents",
-    backTitle: "First moves that stick for life",
+    frontMeta: "For parents",
+    backEyebrow: "For parents & guardians",
+    backTitle: "What your child actually gets",
     backLede:
-      "Age-ready training that helps your child think ahead, stay present, and grow confidence at the board — with structure you can see.",
-    focusPillar: "kids" as const,
+      "Hikaru kids training is age-ready and structured. We start where your child is — curiosity first, openings later — so focus and confidence grow without burning out the joy of the game.",
+    pillars: [
+      {
+        label: "At the board",
+        title: "Skills that stick",
+        line: "Focus, patience, sportsmanship.",
+        body: "Children learn piece stories, fair play, and how to think ahead — habits that show up in homework and everyday decisions.",
+        focus: true,
+      },
+      {
+        label: "For you",
+        title: "Clear progress",
+        line: "You can see what improved.",
+        body: "Sessions follow a plan. We share what was practiced and what comes next, so you are not guessing at home.",
+      },
+      {
+        label: "Practical",
+        title: "Real schedules",
+        line: "Fits family life.",
+        body: "Group kids sessions and optional private top-ups when your child is ready for sharper work — without weekend-only chaos.",
+      },
+    ] satisfies PrintCardPillar[],
     benefits: [
-      "Focus, patience, and sportsmanship that carry past the board",
-      "Clear session structure — not random free play",
-      "Progress parents can see and talk about at home",
-      "Coaching that respects real family schedules",
+      "Age-ready entry — not a wall of openings on day one",
+      "Focus and calm under pressure, practiced every session",
+      "Sportsmanship and respectful competition",
+      "Progress notes parents can talk about at home",
+      "Path into school clubs or private coaching when ready",
     ],
     ctaTitle: "Inquire for kids training",
+  },
+  {
+    id: "kids" as const,
+    title: "Kids",
+    line: "First moves that stick for life.",
+    body: "A3 card for young players — fun missions, real games, and skills that grow with them.",
+    eyebrow: "Play · Learn · Grow",
+    tagline:
+      "Learn the board like a game worth mastering — names, missions, and real matches.",
+    frontMeta: "Kids training",
+    backEyebrow: "For young players",
+    backTitle: "Chess that still feels like play",
+    backLede:
+      "Knights hop. Rooks run straight. Kings stay brave but careful. Hikaru kids training turns rules into stories and practice into missions — then you play for real.",
+    pillars: [
+      {
+        label: "01",
+        title: "Learn",
+        line: "Pieces with purpose.",
+        body: "You meet each piece through stories and small missions before diving into heavy theory.",
+        focus: true,
+      },
+      {
+        label: "02",
+        title: "Play",
+        line: "Real games, every week.",
+        body: "Practice seats, mini-matches, and fair play — so you get better by actually sitting at the board.",
+      },
+      {
+        label: "03",
+        title: "Level up",
+        line: "Ready for more?",
+        body: "When you want sharper calculation, we open school clubs and private coaching paths.",
+      },
+    ] satisfies PrintCardPillar[],
+    benefits: [
+      "Fun first — discipline without killing curiosity",
+      "Clear goals each session so you know what you are working on",
+      "Friends at the board and respectful competition",
+      "Coaches who explain, not just lecture",
+      "A path from first moves to serious improvement",
+    ],
+    ctaTitle: "Join a kids session",
   },
   {
     id: "schools" as const,
     title: "Schools",
     line: "Campus programs that fit real timetables.",
-    body: "A3 double-sided card for administrators — clubs, terms, and partnerships.",
-    eyebrow: "Academy · Campus · Clubs",
+    body: "A3 card for heads, teachers, and clubs — structure, outcomes, and flexible delivery.",
+    eyebrow: "Campus · Clubs · Terms",
     tagline:
       "We bring the board to your campus — structured programs that fit real timetables and real classrooms.",
-    frontMeta: "School programs",
+    frontMeta: "School partnerships",
     backEyebrow: "For schools & administrators",
-    backTitle: "Chess that fits your timetable",
+    backTitle: "A program staff can stand behind",
     backLede:
-      "Structured school programs, club setups, and term-long training — delivered with clear session design and outcomes staff can stand behind.",
-    focusPillar: "schools" as const,
+      "Hikaru partners with schools for clubs, term blocks, and demo days. You get session design that fits the bell schedule, and outcomes you can report to parents and leadership.",
+    pillars: [
+      {
+        label: "Delivery",
+        title: "On your campus",
+        line: "We come to you.",
+        body: "Clubs, after-school blocks, or term programs — set up around your calendar, rooms, and class sizes.",
+        focus: true,
+      },
+      {
+        label: "Quality",
+        title: "Visible structure",
+        line: "Teachers can observe.",
+        body: "Clear session plans, warm-ups, guided play, and wrap-ups — not unstructured free play with a board in the corner.",
+      },
+      {
+        label: "Outcomes",
+        title: "Reportable progress",
+        line: "Parents ask. You can answer.",
+        body: "Focus, problem-solving, and sportsmanship markers schools can share with confidence.",
+      },
+    ] satisfies PrintCardPillar[],
     benefits: [
-      "Programs designed for school days — not weekend-only hobby clubs",
-      "Clear session structure teachers and heads can observe",
-      "Progress schools can report to parents with confidence",
-      "Flexible setups: clubs, term blocks, or demo days",
+      "Fits school days — not weekend-only hobby logistics",
+      "Flexible formats: clubs, term blocks, assemblies, demo days",
+      "Session structure heads and teachers can review",
+      "Pathway from classroom curiosity to competitive hopefuls",
+      "One partner for kids training, clubs, and follow-on coaching",
     ],
     ctaTitle: "Partner with Hikaru",
+  },
+  {
+    id: "coaching" as const,
+    title: "Coaching",
+    line: "Private pressure. Personal progress.",
+    body: "A3 card for serious improvers — one-to-one and small-group coaching with a clear plan.",
+    eyebrow: "1:1 · Small group · Progress",
+    tagline:
+      "Sharper calculation, honest feedback, and a plan built around your games.",
+    frontMeta: "Private coaching",
+    backEyebrow: "For players who want more",
+    backTitle: "Training with intention",
+    backLede:
+      "Whether you are climbing from beginner basics or preparing for tougher opponents, Hikaru coaching is personal: your positions, your habits, your next rating leap.",
+    pillars: [
+      {
+        label: "Format",
+        title: "1:1 or small group",
+        line: "Pressure that fits you.",
+        body: "Private lessons for deep work, or tight groups when peer competition sharpens the session.",
+        focus: true,
+      },
+      {
+        label: "Method",
+        title: "Your games first",
+        line: "No generic syllabus dump.",
+        body: "We review your recent play, patch recurring mistakes, and drill the skills that actually show up in your matches.",
+      },
+      {
+        label: "Pace",
+        title: "Real schedules",
+        line: "Progress without burnout.",
+        body: "Session frequency that respects school, work, and life — with homework that is short and purposeful.",
+      },
+    ] satisfies PrintCardPillar[],
+    benefits: [
+      "Personalized plans from your own games",
+      "Tactics, endgames, and opening ideas that match your level",
+      "Honest feedback with clear next steps",
+      "Beginner-friendly through tournament hopeful",
+      "Optional bridge from kids/school programs into private work",
+    ],
+    ctaTitle: "Book a coaching consult",
   },
   {
     id: "events" as const,
     title: "Events",
     line: "Full showcase for booths, fairs, and open days.",
-    body: "A3 double-sided card covering Kids, Schools, and Coaching in one piece.",
+    body: "A3 card for community events — everything Hikaru offers in one clear piece.",
     eyebrow: "Academy · Schools · Coaching",
     tagline: "We train minds. In schools. At the board.",
     frontMeta: "Meet us here",
     backEyebrow: "What we do",
-    backTitle: "Three ways to train with Hikaru",
+    backTitle: "Three paths. One standard.",
     backLede:
-      "Whether you are a parent, a school, or a player chasing sharper calculation — there is a Hikaru path for you. Start a conversation today.",
-    focusPillar: null,
+      "At this event you can ask about kids training, school partnerships, or private coaching. Same Hikaru discipline — pick the door that fits you.",
+    pillars: [
+      {
+        label: "01",
+        title: "Kids",
+        line: "First moves that stick.",
+        body: "Age-ready sessions that build focus and confidence while keeping the game fun for young players.",
+        focus: true,
+      },
+      {
+        label: "02",
+        title: "Schools",
+        line: "Board on campus.",
+        body: "Clubs, term programs, and demos structured for real timetables and classrooms.",
+      },
+      {
+        label: "03",
+        title: "Coaching",
+        line: "Personal progress.",
+        body: "One-to-one or small-group training for anyone hungry to improve — beginners to tournament hopefuls.",
+      },
+    ] satisfies PrintCardPillar[],
     benefits: [
-      "Clear session structure every time we meet the board",
-      "Progress parents and schools can see",
-      "Coaching that respects real schedules",
-      "Community sessions, demos, and match days",
+      "Talk to a coach in person at this event",
+      "Clear next steps for parents, schools, or players",
+      "Community sessions, demos, and match-day energy",
+      "Same quality whether you join a club or go private",
+      "Scan the QR or leave your details — we follow up",
     ],
     ctaTitle: "Talk to us at this event",
   },
 ] as const;
+
+export type PrintCardAudience = (typeof printCards)[number]["id"];
 
 export function getPrintCard(audience: string) {
   return printCards.find((card) => card.id === audience) ?? printCards[0];

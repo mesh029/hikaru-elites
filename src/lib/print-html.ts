@@ -1,6 +1,5 @@
 import {
   getPrintCard,
-  programs,
   type PrintCardAudience,
   type PrintPhoto,
 } from "@/lib/content";
@@ -103,21 +102,14 @@ export function buildPrintCardHtml({
   const objectPosition = escapeHtml(photo.objectPosition);
   const photoSrc = escapeHtml(photo.src);
 
-  const pillars = programs
-    .map((program, index) => {
-      const label =
-        card.focusPillar === null
-          ? String(index + 1).padStart(2, "0")
-          : card.focusPillar === program.id
-            ? "Focus"
-            : "Also offer";
-      const focusClass =
-        card.focusPillar === program.id ? " focus" : "";
+  const pillars = card.pillars
+    .map((pillar) => {
+      const focusClass = pillar.focus ? " focus" : "";
       return `<section class="pillar${focusClass}">
-  <p class="plabel">${escapeHtml(label)}</p>
-  <h3 class="ptitle">${escapeHtml(program.title)}</h3>
-  <p class="pline">${escapeHtml(program.line)}</p>
-  <p class="pbody">${escapeHtml(program.body)}</p>
+  <p class="plabel">${escapeHtml(pillar.label)}</p>
+  <h3 class="ptitle">${escapeHtml(pillar.title)}</h3>
+  <p class="pline">${escapeHtml(pillar.line)}</p>
+  <p class="pbody">${escapeHtml(pillar.body)}</p>
 </section>`;
     })
     .join("");
@@ -153,7 +145,9 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
 <nav class="nav no-print">
   <a href="${escapeHtml(origin)}/resources">← Resources</a>
   <a href="?audience=parents&${photoQ}">Parents</a>
+  <a href="?audience=kids&${photoQ}">Kids</a>
   <a href="?audience=schools&${photoQ}">Schools</a>
+  <a href="?audience=coaching&${photoQ}">Coaching</a>
   <a href="?audience=events&${photoQ}">Events</a>
   <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
   <span class="hint">A3 · front + back · ${escapeHtml(photo.label)}</span>
