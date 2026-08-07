@@ -23,31 +23,38 @@ export function PrintCardSheets({
 }: PrintCardSheetsProps) {
   const card = getPrintCard(audience);
 
+  const photoQuery =
+    photo.id === "custom"
+      ? `img=${encodeURIComponent(photo.src)}`
+      : `photo=${encodeURIComponent(photo.id)}`;
+
+  const standaloneHref = `/api/print-card?audience=${audience}&${photoQuery}`;
+  const downloadPhotoHref =
+    photo.id === "custom"
+      ? `/api/download-image?url=${encodeURIComponent(photo.src)}`
+      : `/api/download-image?id=${photo.id}`;
+
   useEffect(() => {
     if (!autoprint) return;
-    const id = window.setTimeout(() => window.print(), 700);
-    return () => window.clearTimeout(id);
-  }, [autoprint]);
+    // Prefer the standalone HTML print sheet — avoids Next.js layout blank pages.
+    window.location.replace(`${standaloneHref}&print=1`);
+  }, [autoprint, standaloneHref]);
 
   return (
     <div className="print-root">
       <nav className="print-screen-nav no-print">
         <Link href="/resources">← Resources</Link>
-        <Link href={`/print/card/parents?photo=${photo.id}`}>Parents</Link>
-        <Link href={`/print/card/schools?photo=${photo.id}`}>Schools</Link>
-        <Link href={`/print/card/events?photo=${photo.id}`}>Events</Link>
-        <button
-          type="button"
-          className="print-download-btn"
-          onClick={() => window.print()}
-        >
+        <Link href={`/print/card/parents?${photoQuery}`}>Parents</Link>
+        <Link href={`/print/card/schools?${photoQuery}`}>Schools</Link>
+        <Link href={`/print/card/events?${photoQuery}`}>Events</Link>
+        <a className="print-download-btn" href={`${standaloneHref}&print=1`}>
           Download / Print PDF
-        </button>
-        <a
-          className="print-secondary-btn"
-          href={`/api/download-image?id=${photo.id}`}
-        >
+        </a>
+        <a className="print-secondary-btn" href={downloadPhotoHref}>
           Download photo
+        </a>
+        <a className="print-secondary-btn" href={standaloneHref} target="_blank" rel="noreferrer">
+          Open print sheet
         </a>
         <span className="print-hint">A3 · front + back · {photo.label}</span>
       </nav>

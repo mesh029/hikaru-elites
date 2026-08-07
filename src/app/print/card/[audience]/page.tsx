@@ -3,14 +3,14 @@ import { notFound } from "next/navigation";
 
 import { PrintCardSheets } from "@/components/print-card-sheets";
 import {
-  getPrintPhoto,
   printCards,
+  resolvePrintPhoto,
   type PrintCardAudience,
 } from "@/lib/content";
 
 type PageProps = {
   params: Promise<{ audience: string }>;
-  searchParams: Promise<{ photo?: string; print?: string }>;
+  searchParams: Promise<{ photo?: string; img?: string; print?: string }>;
 };
 
 const audiences = new Set(printCards.map((card) => card.id));
@@ -35,7 +35,10 @@ export default async function PrintCardPage({ params, searchParams }: PageProps)
     notFound();
   }
 
-  const photo = getPrintPhoto(query.photo);
+  const photo = resolvePrintPhoto({
+    photo: query.photo,
+    img: query.img,
+  });
 
   return (
     <PrintCardSheets

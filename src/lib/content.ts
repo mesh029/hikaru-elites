@@ -196,17 +196,60 @@ export const printPhotos = [
   },
 ] as const;
 
-export type PrintPhoto = (typeof printPhotos)[number];
+export type PrintPhoto = {
+  id: string;
+  file: string;
+  label: string;
+  alt: string;
+  src: string;
+  thumb: string;
+  objectPosition: string;
+};
+
 export type PrintCardAudience = "parents" | "schools" | "events";
 
 export const DEFAULT_PRINT_PHOTO_ID = "boardCape" as const;
 
 export function getPrintPhoto(id?: string | null): PrintPhoto {
+  const match = printPhotos.find((photo) => photo.id === id);
+  if (match) return match;
   return (
-    printPhotos.find((photo) => photo.id === id) ??
     printPhotos.find((photo) => photo.id === DEFAULT_PRINT_PHOTO_ID) ??
     printPhotos[0]
   );
+}
+
+/** Accept only http(s) image URLs for custom card generation. */
+export function sanitizeImageUrl(raw?: string | null): string | null {
+  if (!raw) return null;
+  try {
+    const url = new URL(raw.trim());
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+export function customPrintPhoto(imageUrl: string): PrintPhoto {
+  return {
+    id: "custom",
+    file: "custom.jpg",
+    label: "Custom image URL",
+    alt: "Custom card image",
+    src: imageUrl,
+    thumb: imageUrl,
+    objectPosition: "50% 30%",
+  };
+}
+
+export function resolvePrintPhoto(options: {
+  photo?: string | null;
+  img?: string | null;
+}): PrintPhoto {
+  const custom = sanitizeImageUrl(options.img);
+  if (custom) return customPrintPhoto(custom);
+  return getPrintPhoto(options.photo);
 }
 
 export const printCards = [

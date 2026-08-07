@@ -3,20 +3,70 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Download, ExternalLink, ImageDown } from "lucide-react";
+import { Download, ExternalLink, ImageDown, Link2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   DEFAULT_PRINT_PHOTO_ID,
+  customPrintPhoto,
   getPrintPhoto,
   printCards,
   printPhotos,
+  sanitizeImageUrl,
+  type PrintPhoto,
 } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
+function buildCardHref(
+  audience: string,
+  photo: PrintPhoto,
+  opts?: { print?: boolean }
+) {
+  const params = new URLSearchParams({ audience });
+  if (photo.id === "custom") {
+    params.set("img", photo.src);
+  } else {
+    params.set("photo", photo.id);
+  }
+  if (opts?.print) params.set("print", "1");
+  return `/api/print-card?${params.toString()}`;
+}
+
 export function ResourcesPrintStudio() {
   const [photoId, setPhotoId] = useState<string>(DEFAULT_PRINT_PHOTO_ID);
-  const photo = useMemo(() => getPrintPhoto(photoId), [photoId]);
+  const [customUrl, setCustomUrl] = useState("");
+  const [customActive, setCustomActive] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
+
+  const photo = useMemo<PrintPhoto>(() => {
+    if (customActive) {
+      const clean = sanitizeImageUrl(customUrl);
+      if (clean) return customPrintPhoto(clean);
+    }
+    return getPrintPhoto(photoId);
+  }, [customActive, customUrl, photoId]);
+
+  function applyCustomUrl() {
+    const clean = sanitizeImageUrl(customUrl);
+    if (!clean) {
+      setUrlError("Paste a full http(s) image URL.");
+      setCustomActive(false);
+      return;
+    }
+    setUrlError(null);
+    setCustomActive(true);
+  }
+
+  function selectCatalogPhoto(id: string) {
+    setPhotoId(id);
+    setCustomActive(false);
+    setUrlError(null);
+  }
+
+  const downloadPhotoHref =
+    photo.id === "custom"
+      ? `/api/download-image?url=${encodeURIComponent(photo.src)}`
+      : `/api/download-image?id=${photo.id}`;
 
   return (
     <div className="pt-14">
@@ -29,9 +79,8 @@ export function ResourcesPrintStudio() {
             Print cards
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Pick a Sirv field photo, then download parents, schools, or events
-            A3 cards. Photos load from the CDN online — save a PDF from the
-            print view, or download the source image.
+            Pick a Sirv field photo or paste any image URL, then preview and
+            print parents, schools, or events A3 cards.
           </p>
         </div>
       </section>
@@ -47,23 +96,60 @@ export function ResourcesPrintStudio() {
                 {photo.label}
               </h2>
             </div>
-            <Button
-              render={<a href={`/api/download-image?id=${photo.id}`} />}
-              variant="outline"
-            >
+            <Button render={<a href={downloadPhotoHref} />} variant="outline">
               <ImageDown className="size-4" />
               Download selected photo
             </Button>
           </div>
 
+          <div className="mt-8 border border-border bg-card/20 p-4 sm:p-5">
+            <p className="font-mono text-[11px] tracking-[0.28em] text-muted-foreground uppercase">
+              Or paste image URL
+            </p>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+              <label className="relative flex-1">
+                <span className="sr-only">Image URL</span>
+                <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground">
+                  <Link2 className="size-4" />
+                </span>
+                <input
+                  type="url"
+                  value={customUrl}
+                  onChange={(event) => {
+                    setCustomUrl(event.target.value);
+                    if (customActive) setCustomActive(false);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      applyCustomUrl();
+                    }
+                  }}
+                  placeholder="https://meshackariri.sirv.com/chess101/chess/IMG-....jpg"
+                  className="h-11 w-full border border-border bg-background pr-3 pl-10 text-sm outline-none focus:border-primary"
+                />
+              </label>
+              <Button type="button" onClick={applyCustomUrl} className="sm:w-auto">
+                Use this URL
+              </Button>
+            </div>
+            {urlError ? (
+              <p className="mt-2 text-sm text-destructive">{urlError}</p>
+            ) : customActive ? (
+              <p className="mt-2 font-mono text-xs tracking-wide text-secondary uppercase">
+                Custom URL active — cards below use this image
+              </p>
+            ) : null}
+          </div>
+
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
             {printPhotos.map((item) => {
-              const selected = item.id === photo.id;
+              const selected = !customActive && item.id === photoId;
               return (
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setPhotoId(item.id)}
+                  onClick={() => selectCatalogPhoto(item.id)}
                   className={cn(
                     "group overflow-hidden border text-left transition-colors",
                     selected
@@ -95,21 +181,20 @@ export function ResourcesPrintStudio() {
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-3">
           {printCards.map((card) => {
-            const previewHref = `/print/card/${card.id}?photo=${photo.id}`;
-            const printHref = `${previewHref}&print=1`;
+            const previewHref = buildCardHref(card.id, photo);
+            const printHref = buildCardHref(card.id, photo, { print: true });
             return (
               <article
                 key={card.id}
                 className="flex flex-col overflow-hidden border border-border bg-card/30"
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <Image
+                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={photo.thumb}
                     alt={`${card.title} card with ${photo.label}`}
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 size-full object-cover"
                     style={{ objectPosition: photo.objectPosition }}
-                    sizes="(max-width: 1024px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
@@ -127,7 +212,9 @@ export function ResourcesPrintStudio() {
                   <p className="text-sm text-muted-foreground">{card.body}</p>
                   <div className="mt-6 flex flex-col gap-3">
                     <Button
-                      render={<a href={printHref} target="_blank" rel="noreferrer" />}
+                      render={
+                        <a href={printHref} target="_blank" rel="noreferrer" />
+                      }
                       className="w-full"
                     >
                       <Download className="size-4" />
@@ -155,9 +242,9 @@ export function ResourcesPrintStudio() {
             Print tip
           </p>
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            In the print dialog choose A3, margins none, background graphics on.
-            Use short-edge flip for double-sided. Photos are served from Sirv
-            so the live site always uses the CDN originals.
+            Preview opens a standalone print sheet (not the site chrome). In the
+            print dialog choose A3, margins none, and turn on background
+            graphics. Short-edge flip for double-sided.
           </p>
           <Button render={<Link href="/contact" />} className="mt-6">
             Ask for print support

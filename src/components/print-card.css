@@ -14,6 +14,8 @@
   color: var(--print-fg);
   background: #111;
   min-height: 100vh;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
 .print-screen-nav {
@@ -89,6 +91,8 @@
   overflow: hidden;
   background: var(--print-bg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
 .print-sheet--back {
@@ -135,6 +139,7 @@
   justify-content: flex-end;
   padding: var(--print-safe);
   z-index: 2;
+  color: var(--print-fg);
 }
 
 .print-eyebrow {
@@ -157,6 +162,7 @@
   letter-spacing: 0.08em;
   line-height: 0.9;
   text-transform: uppercase;
+  color: var(--print-fg);
 }
 
 .print-wordmark-sub {
@@ -194,6 +200,8 @@
   flex-direction: column;
   padding: var(--print-safe);
   min-height: 0;
+  background: var(--print-bg);
+  color: var(--print-fg);
 }
 
 .print-back-header {
@@ -207,6 +215,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.15;
+  color: var(--print-fg);
 }
 
 .print-back-lede {
@@ -253,6 +262,7 @@
   font-size: 18pt;
   font-weight: 600;
   letter-spacing: 0.06em;
+  color: var(--print-fg);
 }
 
 .print-pillar-line {
@@ -318,6 +328,7 @@
   font-size: 16pt;
   font-weight: 600;
   letter-spacing: 0.04em;
+  color: var(--print-fg);
 }
 
 .print-cta-links {
@@ -365,27 +376,64 @@
 }
 
 @media print {
+  html,
+  body {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #2c2c2c !important;
+    color: #e8e8e8 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body > header,
+  body > footer,
+  [data-nextjs-toast],
+  [data-nextjs-dialog-overlay],
+  nextjs-portal {
+    display: none !important;
+  }
+
+  main {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    flex: none !important;
+  }
+
   .print-root {
-    background: none;
+    background: #2c2c2c !important;
+    min-height: 0 !important;
   }
 
   .print-screen-nav,
-  .no-print,
-  header,
-  footer,
-  [data-sticky-inquire] {
+  .no-print {
     display: none !important;
   }
 
   .print-sheet {
-    margin: 0;
-    box-shadow: none;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: #2c2c2c !important;
     page-break-after: always;
     break-after: page;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .print-sheet:last-child {
     page-break-after: auto;
     break-after: auto;
+  }
+
+  .print-pillar,
+  .print-back-inner,
+  .print-front-veil,
+  .print-qr-slot {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
