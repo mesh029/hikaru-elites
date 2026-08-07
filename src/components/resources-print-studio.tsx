@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Download, ExternalLink, Link2 } from "lucide-react";
+import { ExternalLink, Link2 } from "lucide-react";
 
+import { DownloadCardPdfButton } from "@/components/download-card-pdf-button";
 import { Button } from "@/components/ui/button";
 import {
   DEFAULT_PRINT_PHOTO_ID,
@@ -194,13 +195,10 @@ export function ResourcesPrintStudio() {
                 <div className="flex flex-1 flex-col p-5">
                   <p className="text-sm text-muted-foreground">{card.body}</p>
                   <div className="mt-6 flex flex-col gap-3">
-                    <Button
-                      render={<a href={pdfHref} download />}
-                      className="w-full"
-                    >
-                      <Download className="size-4" />
-                      Download card PDF
-                    </Button>
+                    <DownloadCardPdfButton
+                      href={pdfHref}
+                      filenameHint={`hikaru-a3-${card.id}-${photo.id}.pdf`}
+                    />
                     <Button
                       render={
                         <a href={previewHref} target="_blank" rel="noreferrer" />
@@ -223,9 +221,8 @@ export function ResourcesPrintStudio() {
             Note
           </p>
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            Download card PDF gives you the designed A3 front + back with your
-            chosen photo baked in. Preview opens the live layout if you want to
-            check it before saving.
+            Download card PDF builds a real A3 front + back PDF with your chosen
+            photo. Preview opens the live layout if you want to check it first.
           </p>
           <Button render={<Link href="/contact" />} className="mt-6">
             Ask for print support

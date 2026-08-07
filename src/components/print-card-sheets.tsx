@@ -30,10 +30,6 @@ export function PrintCardSheets({
 
   const standaloneHref = `/api/print-card?audience=${audience}&${photoQuery}`;
   const pdfHref = `/api/print-pdf?audience=${audience}&${photoQuery}`;
-  const downloadPhotoHref =
-    photo.id === "custom"
-      ? `/api/download-image?url=${encodeURIComponent(photo.src)}`
-      : `/api/download-image?id=${photo.id}`;
 
   useEffect(() => {
     if (!autoprint) return;
@@ -52,7 +48,12 @@ export function PrintCardSheets({
         <a className="print-download-btn" href={pdfHref}>
           Download card PDF
         </a>
-        <a className="print-secondary-btn" href={standaloneHref} target="_blank" rel="noreferrer">
+        <a
+          className="print-secondary-btn"
+          href={standaloneHref}
+          target="_blank"
+          rel="noreferrer"
+        >
           Preview / print
         </a>
         <span className="print-hint">A3 · front + back · {photo.label}</span>
