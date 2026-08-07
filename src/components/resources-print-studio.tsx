@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Download, ExternalLink, ImageDown, Link2 } from "lucide-react";
+import { Download, ExternalLink, Link2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,19 +17,11 @@ import {
 } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
-function buildCardHref(
-  audience: string,
-  photo: PrintPhoto,
-  opts?: { print?: boolean }
-) {
+function buildCardQuery(audience: string, photo: PrintPhoto) {
   const params = new URLSearchParams({ audience });
-  if (photo.id === "custom") {
-    params.set("img", photo.src);
-  } else {
-    params.set("photo", photo.id);
-  }
-  if (opts?.print) params.set("print", "1");
-  return `/api/print-card?${params.toString()}`;
+  if (photo.id === "custom") params.set("img", photo.src);
+  else params.set("photo", photo.id);
+  return params.toString();
 }
 
 export function ResourcesPrintStudio() {
@@ -63,11 +55,6 @@ export function ResourcesPrintStudio() {
     setUrlError(null);
   }
 
-  const downloadPhotoHref =
-    photo.id === "custom"
-      ? `/api/download-image?url=${encodeURIComponent(photo.src)}`
-      : `/api/download-image?id=${photo.id}`;
-
   return (
     <div className="pt-14">
       <section className="border-b border-border px-4 py-16 sm:px-6 lg:px-8">
@@ -79,27 +66,22 @@ export function ResourcesPrintStudio() {
             Print cards
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Pick a Sirv field photo or paste any image URL, then preview and
-            print parents, schools, or events A3 cards.
+            Pick a photo (or paste an image URL), then download an A3 card PDF
+            for parents, schools, or events — the PDF is the designed card, not
+            the raw photo.
           </p>
         </div>
       </section>
 
       <section className="border-b border-border px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
-                Choose photo
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-wide">
-                {photo.label}
-              </h2>
-            </div>
-            <Button render={<a href={downloadPhotoHref} />} variant="outline">
-              <ImageDown className="size-4" />
-              Download selected photo
-            </Button>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+              Choose photo for the card
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-wide">
+              {photo.label}
+            </h2>
           </div>
 
           <div className="mt-8 border border-border bg-card/20 p-4 sm:p-5">
@@ -137,7 +119,7 @@ export function ResourcesPrintStudio() {
               <p className="mt-2 text-sm text-destructive">{urlError}</p>
             ) : customActive ? (
               <p className="mt-2 font-mono text-xs tracking-wide text-secondary uppercase">
-                Custom URL active — cards below use this image
+                Custom URL active — card PDFs below use this image
               </p>
             ) : null}
           </div>
@@ -181,8 +163,9 @@ export function ResourcesPrintStudio() {
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-3">
           {printCards.map((card) => {
-            const previewHref = buildCardHref(card.id, photo);
-            const printHref = buildCardHref(card.id, photo, { print: true });
+            const query = buildCardQuery(card.id, photo);
+            const pdfHref = `/api/print-pdf?${query}`;
+            const previewHref = `/api/print-card?${query}`;
             return (
               <article
                 key={card.id}
@@ -199,7 +182,7 @@ export function ResourcesPrintStudio() {
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
                     <p className="font-mono text-[10px] tracking-[0.3em] text-secondary uppercase">
-                      A3 · Front + back
+                      A3 card PDF · Front + back
                     </p>
                     <h2 className="mt-2 text-2xl font-semibold tracking-wide">
                       {card.title}
@@ -212,13 +195,11 @@ export function ResourcesPrintStudio() {
                   <p className="text-sm text-muted-foreground">{card.body}</p>
                   <div className="mt-6 flex flex-col gap-3">
                     <Button
-                      render={
-                        <a href={printHref} target="_blank" rel="noreferrer" />
-                      }
+                      render={<a href={pdfHref} download />}
                       className="w-full"
                     >
                       <Download className="size-4" />
-                      Download / Print PDF
+                      Download card PDF
                     </Button>
                     <Button
                       render={
@@ -239,12 +220,12 @@ export function ResourcesPrintStudio() {
 
         <div className="mt-14 border border-border bg-card/20 p-6 sm:p-8">
           <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
-            Print tip
+            Note
           </p>
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            Preview opens a standalone print sheet (not the site chrome). In the
-            print dialog choose A3, margins none, and turn on background
-            graphics. Short-edge flip for double-sided.
+            Download card PDF gives you the designed A3 front + back with your
+            chosen photo baked in. Preview opens the live layout if you want to
+            check it before saving.
           </p>
           <Button render={<Link href="/contact" />} className="mt-6">
             Ask for print support

@@ -126,50 +126,20 @@ export function buildPrintCardHtml({
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("");
 
-  const autoScript = autoprint
-    ? `<script>
-(function(){
-  function whenReady(cb){
-    var imgs=[].slice.call(document.images);
-    if(!imgs.length){ cb(); return; }
-    var left=imgs.length;
-    function done(){ if(--left===0) cb(); }
-    imgs.forEach(function(img){
-      if(img.complete) done();
-      else {
-        img.addEventListener('load', done);
-        img.addEventListener('error', done);
-      }
-    });
-  }
-  whenReady(function(){ setTimeout(function(){ window.print(); }, 300); });
-})();
-</script>`
-    : `<script>
-(function(){
-  function whenReady(cb){
-    var imgs=[].slice.call(document.images);
-    if(!imgs.length){ cb(); return; }
-    var left=imgs.length;
-    function done(){ if(--left===0) cb(); }
-    imgs.forEach(function(img){
-      if(img.complete) done();
-      else {
-        img.addEventListener('load', done);
-        img.addEventListener('error', done);
-      }
-    });
-  }
-  document.getElementById('print-btn')?.addEventListener('click', function(){
-    whenReady(function(){ window.print(); });
-  });
-})();
-</script>`;
-
   const photoQ =
     photo.id === "custom"
       ? `img=${encodeURIComponent(photo.src)}`
       : `photo=${encodeURIComponent(photo.id)}`;
+
+  const pdfHref = `${escapeHtml(origin)}/api/print-pdf?audience=${encodeURIComponent(audience)}&${photoQ}`;
+
+  const autoScript = autoprint
+    ? `<script>location.replace(${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${photoQ}`)});</script>`
+    : `<script>
+document.getElementById('print-btn')?.addEventListener('click', function(){
+  location.href = ${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${photoQ}`)};
+});
+</script>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -185,7 +155,7 @@ export function buildPrintCardHtml({
   <a href="?audience=parents&${photoQ}">Parents</a>
   <a href="?audience=schools&${photoQ}">Schools</a>
   <a href="?audience=events&${photoQ}">Events</a>
-  <button type="button" class="btn" id="print-btn">Download / Print PDF</button>
+  <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
   <span class="hint">A3 · front + back · ${escapeHtml(photo.label)}</span>
 </nav>
 

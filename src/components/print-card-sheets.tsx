@@ -29,6 +29,7 @@ export function PrintCardSheets({
       : `photo=${encodeURIComponent(photo.id)}`;
 
   const standaloneHref = `/api/print-card?audience=${audience}&${photoQuery}`;
+  const pdfHref = `/api/print-pdf?audience=${audience}&${photoQuery}`;
   const downloadPhotoHref =
     photo.id === "custom"
       ? `/api/download-image?url=${encodeURIComponent(photo.src)}`
@@ -36,9 +37,8 @@ export function PrintCardSheets({
 
   useEffect(() => {
     if (!autoprint) return;
-    // Prefer the standalone HTML print sheet — avoids Next.js layout blank pages.
-    window.location.replace(`${standaloneHref}&print=1`);
-  }, [autoprint, standaloneHref]);
+    window.location.replace(pdfHref);
+  }, [autoprint, pdfHref]);
 
   return (
     <div className="print-root">
@@ -47,14 +47,11 @@ export function PrintCardSheets({
         <Link href={`/print/card/parents?${photoQuery}`}>Parents</Link>
         <Link href={`/print/card/schools?${photoQuery}`}>Schools</Link>
         <Link href={`/print/card/events?${photoQuery}`}>Events</Link>
-        <a className="print-download-btn" href={`${standaloneHref}&print=1`}>
-          Download / Print PDF
-        </a>
-        <a className="print-secondary-btn" href={downloadPhotoHref}>
-          Download photo
+        <a className="print-download-btn" href={pdfHref}>
+          Download card PDF
         </a>
         <a className="print-secondary-btn" href={standaloneHref} target="_blank" rel="noreferrer">
-          Open print sheet
+          Preview / print
         </a>
         <span className="print-hint">A3 · front + back · {photo.label}</span>
       </nav>
