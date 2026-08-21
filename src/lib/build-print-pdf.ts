@@ -1,4 +1,4 @@
-import { PDFDocument, PDFImage, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument, PDFImage, StandardFonts } from "pdf-lib";
 import sharp from "sharp";
 
 import {
@@ -6,23 +6,16 @@ import {
   type PrintCardAudience,
   type PrintPhoto,
 } from "@/lib/content";
+import {
+  DEFAULT_PRINT_THEME,
+  PRINT_THEME_PDF,
+  type PrintTheme,
+} from "@/lib/print-theme";
 
 /** A5 portrait in PDF points (148mm x 210mm) */
 const PAGE_W = 419.53;
 const PAGE_H = 595.28;
 const MARGIN = 22;
-
-const COLORS = {
-  bg: rgb(0.173, 0.173, 0.173),
-  card: rgb(0.227, 0.227, 0.227),
-  fg: rgb(0.91, 0.91, 0.91),
-  muted: rgb(0.66, 0.66, 0.66),
-  secondary: rgb(0.486, 0.702, 0.259),
-  primary: rgb(0.886, 0.239, 0.18),
-  accent: rgb(0.42, 0.639, 0.831),
-  white: rgb(1, 1, 1),
-  border: rgb(0.36, 0.36, 0.36),
-};
 
 function safeText(value: string) {
   return value
@@ -172,8 +165,15 @@ export async function buildPrintCardPdf(options: {
   audience: PrintCardAudience;
   photo: PrintPhoto;
   origin: string;
+  theme?: PrintTheme;
 }) {
-  const { audience, photo, origin } = options;
+  const {
+    audience,
+    photo,
+    origin,
+    theme = DEFAULT_PRINT_THEME,
+  } = options;
+  const COLORS = PRINT_THEME_PDF[theme];
   const card = getPrintCard(audience);
   const pdf = await PDFDocument.create();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
@@ -205,8 +205,8 @@ export async function buildPrintCardPdf(options: {
       y: (i * PAGE_H * 0.56) / 28,
       width: PAGE_W,
       height: (PAGE_H * 0.56) / 28 + 1,
-      color: COLORS.bg,
-      opacity: 0.95 * (1 - t),
+      color: COLORS.veilBase,
+      opacity: COLORS.veilOpacity * (1 - t),
     });
   }
 

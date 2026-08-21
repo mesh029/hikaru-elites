@@ -3,6 +3,11 @@ import {
   type PrintCardAudience,
   type PrintPhoto,
 } from "@/lib/content";
+import {
+  DEFAULT_PRINT_THEME,
+  printThemeCssVars,
+  type PrintTheme,
+} from "@/lib/print-theme";
 
 function escapeHtml(value: string) {
   return value
@@ -20,65 +25,71 @@ html,body{
   -webkit-print-color-adjust:exact!important;
   print-color-adjust:exact!important;
   color-adjust:exact!important;
-  background:#111;
-  color:#e8e8e8;
+  background:var(--print-page-bg);
+  color:var(--print-fg);
   font-family:Oxanium,sans-serif;
 }
 body{display:block!important;min-height:0!important;height:auto!important;overflow:visible!important}
 .nav{
   position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;
-  padding:1rem 1.25rem;background:#1a1a1a;border-bottom:1px solid #5c5c5c;
+  padding:1rem 1.25rem;background:var(--print-nav-bg);border-bottom:1px solid var(--print-border);
   font-family:"Source Code Pro",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase
 }
-.nav a{color:#6ba3d4;text-decoration:none}
+.nav a{color:var(--print-accent);text-decoration:none}
 .btn{
-  display:inline-flex;align-items:center;padding:.55rem 1rem;border:1px solid #e23d2e;
-  background:#e23d2e;color:#fff;font:inherit;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none
+  display:inline-flex;align-items:center;padding:.55rem 1rem;border:1px solid var(--print-primary);
+  background:var(--print-primary);color:#fff;font:inherit;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none
 }
-.hint{margin-left:auto;color:#a8a8a8;text-transform:none;letter-spacing:.06em}
+.theme-toggle{display:inline-flex;border:1px solid var(--print-border);overflow:hidden}
+.theme-toggle a{
+  padding:.45rem .7rem;color:var(--print-muted);text-decoration:none;border-right:1px solid var(--print-border)
+}
+.theme-toggle a:last-child{border-right:0}
+.theme-toggle a.is-active{background:var(--print-card);color:var(--print-fg)}
+.hint{margin-left:auto;color:var(--print-muted);text-transform:none;letter-spacing:.06em}
 .sheet{
   width:148mm;height:210mm;margin:1.5rem auto;position:relative;overflow:hidden;
-  background:#2c2c2c;box-shadow:0 12px 40px rgba(0,0,0,.55);
+  background:var(--print-bg);box-shadow:0 12px 40px rgba(0,0,0,.55);
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
 }
 .sheet-back{display:flex;flex-direction:column}
 .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,26,.97) 0%,rgba(26,26,26,.78) 32%,rgba(26,26,26,.25) 58%,rgba(26,26,26,.15) 100%)}
+.veil{position:absolute;inset:0;background:var(--print-veil)}
 .grid{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(to right,currentColor 1px,transparent 1px),linear-gradient(to bottom,currentColor 1px,transparent 1px);background-size:12.5% 12.5%}
 .content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:8mm;z-index:2}
-.eyebrow{font-family:"Source Code Pro",monospace;font-size:7pt;letter-spacing:.28em;text-transform:uppercase;color:#7cb342}
-.eyebrow.muted{color:#a8a8a8}
-.wordmark{margin-top:3mm;font-size:34pt;font-weight:600;letter-spacing:.08em;line-height:.9;text-transform:uppercase;color:#e8e8e8}
-.sub{margin-top:1.5mm;font-size:8pt;letter-spacing:.35em;text-transform:uppercase;color:#a8a8a8}
-.tag{margin-top:3.5mm;max-width:120mm;font-size:9pt;line-height:1.35;color:rgba(232,232,232,.92)}
-.meta{margin-top:4mm;display:flex;flex-wrap:wrap;gap:2mm 5mm;font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.14em;text-transform:uppercase;color:#6ba3d4}
-.inner{flex:1;display:flex;flex-direction:column;padding:8mm;min-height:0;background:#2c2c2c}
-.head{border-bottom:1px solid #5c5c5c;padding-bottom:4mm}
-.title{margin-top:2mm;font-size:15pt;font-weight:600;letter-spacing:.04em;line-height:1.15;color:#e8e8e8}
-.lede{margin-top:2mm;max-width:130mm;font-size:8pt;line-height:1.4;color:#a8a8a8}
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:4mm;border:1px solid #5c5c5c}
-.pillar{padding:3.5mm 2.5mm;background:#3a3a3a;border-right:1px solid #5c5c5c;min-height:38mm}
+.eyebrow{font-family:"Source Code Pro",monospace;font-size:7pt;letter-spacing:.28em;text-transform:uppercase;color:var(--print-secondary)}
+.eyebrow.muted{color:var(--print-muted)}
+.wordmark{margin-top:3mm;font-size:34pt;font-weight:600;letter-spacing:.08em;line-height:.9;text-transform:uppercase;color:var(--print-fg)}
+.sub{margin-top:1.5mm;font-size:8pt;letter-spacing:.35em;text-transform:uppercase;color:var(--print-muted)}
+.tag{margin-top:3.5mm;max-width:120mm;font-size:9pt;line-height:1.35;color:var(--print-tag)}
+.meta{margin-top:4mm;display:flex;flex-wrap:wrap;gap:2mm 5mm;font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.14em;text-transform:uppercase;color:var(--print-accent)}
+.inner{flex:1;display:flex;flex-direction:column;padding:8mm;min-height:0;background:var(--print-bg)}
+.head{border-bottom:1px solid var(--print-border);padding-bottom:4mm}
+.title{margin-top:2mm;font-size:15pt;font-weight:600;letter-spacing:.04em;line-height:1.15;color:var(--print-fg)}
+.lede{margin-top:2mm;max-width:130mm;font-size:8pt;line-height:1.4;color:var(--print-muted)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:4mm;border:1px solid var(--print-border)}
+.pillar{padding:3.5mm 2.5mm;background:var(--print-card);border-right:1px solid var(--print-border);min-height:38mm}
 .pillar:last-child{border-right:0}
-.pillar.focus{background:#424242;box-shadow:inset 0 0 0 1.5px #e23d2e}
-.plabel{font-family:"Source Code Pro",monospace;font-size:6pt;letter-spacing:.2em;text-transform:uppercase;color:#7cb342}
-.ptitle{margin-top:1.5mm;font-size:9pt;font-weight:600;letter-spacing:.04em;color:#e8e8e8}
-.pline{margin-top:1mm;font-size:7pt;color:#7cb342;line-height:1.3}
-.pbody{margin-top:1.5mm;font-size:6.5pt;line-height:1.35;color:#a8a8a8}
+.pillar.focus{background:var(--print-focus-card);box-shadow:inset 0 0 0 1.5px var(--print-primary)}
+.plabel{font-family:"Source Code Pro",monospace;font-size:6pt;letter-spacing:.2em;text-transform:uppercase;color:var(--print-secondary)}
+.ptitle{margin-top:1.5mm;font-size:9pt;font-weight:600;letter-spacing:.04em;color:var(--print-fg)}
+.pline{margin-top:1mm;font-size:7pt;color:var(--print-secondary);line-height:1.3}
+.pbody{margin-top:1.5mm;font-size:6.5pt;line-height:1.35;color:var(--print-muted)}
 .benefits{margin-top:4mm;list-style:none;display:grid;gap:1.5mm}
-.benefits li{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.04em;text-transform:uppercase;color:#a8a8a8;padding-left:3.5mm;position:relative}
-.benefits li:before{content:"·";position:absolute;left:0;color:#e23d2e;font-weight:700}
-.cta{margin-top:auto;padding-top:4mm;border-top:1px solid #5c5c5c;display:grid;grid-template-columns:1fr auto;gap:4mm;align-items:end}
-.clabel{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.2em;text-transform:uppercase;color:#e23d2e}
-.ctitle{margin-top:1.5mm;font-size:10pt;font-weight:600;color:#e8e8e8}
-.clinks{margin-top:2mm;font-size:7.5pt;line-height:1.5;color:#a8a8a8}
-.clinks strong{color:#6ba3d4;font-weight:500}
-.qr{width:18mm;height:18mm;border:1px solid #5c5c5c;background:#fff;padding:1mm;display:flex;align-items:center;justify-content:center}
+.benefits li{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.04em;text-transform:uppercase;color:var(--print-muted);padding-left:3.5mm;position:relative}
+.benefits li:before{content:"·";position:absolute;left:0;color:var(--print-primary);font-weight:700}
+.cta{margin-top:auto;padding-top:4mm;border-top:1px solid var(--print-border);display:grid;grid-template-columns:1fr auto;gap:4mm;align-items:end}
+.clabel{font-family:"Source Code Pro",monospace;font-size:6.5pt;letter-spacing:.2em;text-transform:uppercase;color:var(--print-primary)}
+.ctitle{margin-top:1.5mm;font-size:10pt;font-weight:600;color:var(--print-fg)}
+.clinks{margin-top:2mm;font-size:7.5pt;line-height:1.5;color:var(--print-muted)}
+.clinks strong{color:var(--print-accent);font-weight:500}
+.qr{width:18mm;height:18mm;border:1px solid var(--print-border);background:#fff;padding:1mm;display:flex;align-items:center;justify-content:center}
 .qr img{width:100%;height:100%;object-fit:contain}
-.foot{margin-top:3mm;font-family:"Source Code Pro",monospace;font-size:5.5pt;letter-spacing:.14em;text-transform:uppercase;color:#5c5c5c}
+.foot{margin-top:3mm;font-family:"Source Code Pro",monospace;font-size:5.5pt;letter-spacing:.14em;text-transform:uppercase;color:var(--print-foot)}
 @page{size:A5 portrait;margin:0}
 @media print{
   .nav,.no-print{display:none!important}
-  html,body{background:#2c2c2c!important}
+  html,body{background:var(--print-bg)!important}
   .sheet{margin:0;box-shadow:none;page-break-after:always;break-after:page}
   .sheet:last-child{page-break-after:auto;break-after:auto}
 }
@@ -88,6 +99,7 @@ type BuildArgs = {
   audience: PrintCardAudience;
   photo: PrintPhoto;
   origin: string;
+  theme?: PrintTheme;
   autoprint?: boolean;
 };
 
@@ -95,12 +107,14 @@ export function buildPrintCardHtml({
   audience,
   photo,
   origin,
+  theme = DEFAULT_PRINT_THEME,
   autoprint = false,
 }: BuildArgs) {
   const card = getPrintCard(audience);
   const qrSrc = `${origin}/print/assets/qr.png`;
   const objectPosition = escapeHtml(photo.objectPosition);
   const photoSrc = escapeHtml(photo.src);
+  const themeVars = printThemeCssVars(theme);
 
   const pillars = card.pillars
     .map((pillar) => {
@@ -122,35 +136,44 @@ export function buildPrintCardHtml({
     photo.id === "custom"
       ? `img=${encodeURIComponent(photo.src)}`
       : `photo=${encodeURIComponent(photo.id)}`;
+  const themeQ = `theme=${theme}`;
+  const queryBase = `${photoQ}&${themeQ}`;
 
-  const pdfHref = `${escapeHtml(origin)}/api/print-pdf?audience=${encodeURIComponent(audience)}&${photoQ}`;
+  const pdfHref = `${escapeHtml(origin)}/api/print-pdf?audience=${encodeURIComponent(audience)}&${queryBase}`;
 
   const autoScript = autoprint
-    ? `<script>location.replace(${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${photoQ}`)});</script>`
+    ? `<script>location.replace(${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${queryBase}`)});</script>`
     : `<script>
 document.getElementById('print-btn')?.addEventListener('click', function(){
-  location.href = ${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${photoQ}`)};
+  location.href = ${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${queryBase}`)};
 });
 </script>`;
 
+  const darkHref = `?audience=${encodeURIComponent(audience)}&${photoQ}&theme=dark`;
+  const lightHref = `?audience=${encodeURIComponent(audience)}&${photoQ}&theme=light`;
+
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-print-theme="${theme}">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>A5 Card · ${escapeHtml(card.title)} · Hikaru Chess Elites</title>
-<style>${PRINT_CSS}</style>
+<style>:root{${themeVars}}${PRINT_CSS}</style>
 </head>
 <body>
 <nav class="nav no-print">
   <a href="${escapeHtml(origin)}/resources">← Resources</a>
-  <a href="?audience=parents&${photoQ}">Parents</a>
-  <a href="?audience=kids&${photoQ}">Kids</a>
-  <a href="?audience=schools&${photoQ}">Schools</a>
-  <a href="?audience=coaching&${photoQ}">Coaching</a>
-  <a href="?audience=events&${photoQ}">Events</a>
+  <a href="?audience=parents&${queryBase}">Parents</a>
+  <a href="?audience=kids&${queryBase}">Kids</a>
+  <a href="?audience=schools&${queryBase}">Schools</a>
+  <a href="?audience=coaching&${queryBase}">Coaching</a>
+  <a href="?audience=events&${queryBase}">Events</a>
+  <span class="theme-toggle" aria-label="Print theme">
+    <a class="${theme === "dark" ? "is-active" : ""}" href="${darkHref}">Dark</a>
+    <a class="${theme === "light" ? "is-active" : ""}" href="${lightHref}">Light</a>
+  </span>
   <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
-  <span class="hint">A5 · front + back · ${escapeHtml(photo.label)}</span>
+  <span class="hint">A5 · front + back · ${escapeHtml(photo.label)} · ${theme}</span>
 </nav>
 
 <article class="sheet" aria-label="${escapeHtml(card.title)} card front">

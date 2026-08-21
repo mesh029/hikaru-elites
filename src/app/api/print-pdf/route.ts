@@ -6,6 +6,7 @@ import {
   resolvePrintPhoto,
   type PrintCardAudience,
 } from "@/lib/content";
+import { resolvePrintTheme } from "@/lib/print-theme";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,14 +23,15 @@ export async function GET(request: Request) {
     photo: requestUrl.searchParams.get("photo"),
     img: requestUrl.searchParams.get("img"),
   });
+  const theme = resolvePrintTheme(requestUrl.searchParams.get("theme"));
 
   const origin = requestUrl.origin;
   const slug =
     photo.id === "custom" ? "custom" : photo.id.replace(/[^a-z0-9-]/gi, "");
-  const filename = `hikaru-a5-${audience}-${slug}.pdf`;
+  const filename = `hikaru-a5-${audience}-${slug}-${theme}.pdf`;
 
   try {
-    const bytes = await buildPrintCardPdf({ audience, photo, origin });
+    const bytes = await buildPrintCardPdf({ audience, photo, origin, theme });
     return new NextResponse(Buffer.from(bytes), {
       headers: {
         "Content-Type": "application/pdf",

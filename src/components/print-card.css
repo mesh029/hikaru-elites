@@ -8,14 +8,49 @@
   --print-primary: #e23d2e;
   --print-secondary: #7cb342;
   --print-accent: #6ba3d4;
+  --print-page-bg: #111111;
+  --print-nav-bg: #1a1a1a;
+  --print-veil: linear-gradient(
+    to top,
+    rgba(26, 26, 26, 0.97) 0%,
+    rgba(26, 26, 26, 0.78) 32%,
+    rgba(26, 26, 26, 0.25) 58%,
+    rgba(26, 26, 26, 0.15) 100%
+  );
+  --print-tag: rgba(232, 232, 232, 0.92);
+  --print-focus-card: #424242;
+  --print-foot: #5c5c5c;
   --print-safe: 8mm;
   --print-w: 148mm;
   --print-h: 210mm;
   color: var(--print-fg);
-  background: #111;
+  background: var(--print-page-bg);
   min-height: 100vh;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+}
+
+.print-root[data-print-theme="light"] {
+  --print-bg: #f3f4f5;
+  --print-fg: #1a1c1e;
+  --print-card: #e8eaec;
+  --print-muted: #5a5f66;
+  --print-border: #c5c9ce;
+  --print-primary: #c6281a;
+  --print-secondary: #4f7c28;
+  --print-accent: #2f6f9e;
+  --print-page-bg: #dde1e5;
+  --print-nav-bg: #e8eaec;
+  --print-veil: linear-gradient(
+    to top,
+    rgba(243, 244, 245, 0.96) 0%,
+    rgba(243, 244, 245, 0.78) 34%,
+    rgba(243, 244, 245, 0.28) 60%,
+    rgba(243, 244, 245, 0.12) 100%
+  );
+  --print-tag: rgba(26, 28, 30, 0.9);
+  --print-focus-card: #dfe2e5;
+  --print-foot: #8b9198;
 }
 
 .print-screen-nav {
@@ -27,7 +62,7 @@
   gap: 0.75rem;
   align-items: center;
   padding: 1rem 1.25rem;
-  background: #1a1a1a;
+  background: var(--print-nav-bg);
   border-bottom: 1px solid var(--print-border);
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
   font-size: 11px;
@@ -41,6 +76,28 @@
 }
 
 .print-screen-nav a:hover {
+  color: var(--print-fg);
+}
+
+.print-theme-toggle {
+  display: inline-flex;
+  border: 1px solid var(--print-border);
+  overflow: hidden;
+}
+
+.print-theme-toggle a {
+  padding: 0.45rem 0.7rem;
+  color: var(--print-muted);
+  text-decoration: none;
+  border-right: 1px solid var(--print-border);
+}
+
+.print-theme-toggle a:last-child {
+  border-right: 0;
+}
+
+.print-theme-toggle a.is-active {
+  background: var(--print-card);
   color: var(--print-fg);
 }
 
@@ -111,13 +168,7 @@
 .print-front-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(26, 26, 26, 0.97) 0%,
-    rgba(26, 26, 26, 0.78) 32%,
-    rgba(26, 26, 26, 0.25) 58%,
-    rgba(26, 26, 26, 0.15) 100%
-  );
+  background: var(--print-veil);
 }
 
 .print-front-grid {
@@ -179,7 +230,7 @@
   max-width: 120mm;
   font-size: 9pt;
   line-height: 1.35;
-  color: rgba(232, 232, 232, 0.92);
+  color: var(--print-tag);
 }
 
 .print-front-meta {
@@ -245,7 +296,7 @@
 }
 
 .print-pillar.is-focus {
-  background: #424242;
+  background: var(--print-focus-card);
   box-shadow: inset 0 0 0 1.5px var(--print-primary);
 }
 
@@ -367,7 +418,7 @@
   font-size: 5.5pt;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--print-border);
+  color: var(--print-foot);
 }
 
 @page {
@@ -382,8 +433,8 @@
     height: auto !important;
     min-height: 0 !important;
     overflow: visible !important;
-    background: #2c2c2c !important;
-    color: #e8e8e8 !important;
+    background: var(--print-bg) !important;
+    color: var(--print-fg) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -405,7 +456,7 @@
   }
 
   .print-root {
-    background: #2c2c2c !important;
+    background: var(--print-bg) !important;
     min-height: 0 !important;
   }
 
@@ -417,7 +468,7 @@
   .print-sheet {
     margin: 0 !important;
     box-shadow: none !important;
-    background: #2c2c2c !important;
+    background: var(--print-bg) !important;
     page-break-after: always;
     break-after: page;
     -webkit-print-color-adjust: exact !important;

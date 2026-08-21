@@ -7,10 +7,16 @@ import {
   resolvePrintPhoto,
   type PrintCardAudience,
 } from "@/lib/content";
+import { resolvePrintTheme } from "@/lib/print-theme";
 
 type PageProps = {
   params: Promise<{ audience: string }>;
-  searchParams: Promise<{ photo?: string; img?: string; print?: string }>;
+  searchParams: Promise<{
+    photo?: string;
+    img?: string;
+    print?: string;
+    theme?: string;
+  }>;
 };
 
 const audiences = new Set(printCards.map((card) => card.id));
@@ -39,11 +45,13 @@ export default async function PrintCardPage({ params, searchParams }: PageProps)
     photo: query.photo,
     img: query.img,
   });
+  const theme = resolvePrintTheme(query.theme);
 
   return (
     <PrintCardSheets
       audience={audience as PrintCardAudience}
       photo={photo}
+      theme={theme}
       autoprint={query.print === "1"}
     />
   );

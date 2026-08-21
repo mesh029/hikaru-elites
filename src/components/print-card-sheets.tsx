@@ -6,6 +6,10 @@ import { useEffect } from "react";
 
 import type { PrintCardAudience, PrintPhoto } from "@/lib/content";
 import { getPrintCard } from "@/lib/content";
+import {
+  DEFAULT_PRINT_THEME,
+  type PrintTheme,
+} from "@/lib/print-theme";
 import { cn } from "@/lib/utils";
 
 import "./print-card.css";
@@ -13,12 +17,14 @@ import "./print-card.css";
 type PrintCardSheetsProps = {
   audience: PrintCardAudience;
   photo: PrintPhoto;
+  theme?: PrintTheme;
   autoprint?: boolean;
 };
 
 export function PrintCardSheets({
   audience,
   photo,
+  theme = DEFAULT_PRINT_THEME,
   autoprint = false,
 }: PrintCardSheetsProps) {
   const card = getPrintCard(audience);
@@ -27,9 +33,10 @@ export function PrintCardSheets({
     photo.id === "custom"
       ? `img=${encodeURIComponent(photo.src)}`
       : `photo=${encodeURIComponent(photo.id)}`;
+  const query = `${photoQuery}&theme=${theme}`;
 
-  const standaloneHref = `/api/print-card?audience=${audience}&${photoQuery}`;
-  const pdfHref = `/api/print-pdf?audience=${audience}&${photoQuery}`;
+  const standaloneHref = `/api/print-card?audience=${audience}&${query}`;
+  const pdfHref = `/api/print-pdf?audience=${audience}&${query}`;
 
   useEffect(() => {
     if (!autoprint) return;
@@ -37,14 +44,28 @@ export function PrintCardSheets({
   }, [autoprint, pdfHref]);
 
   return (
-    <div className="print-root">
+    <div className="print-root" data-print-theme={theme}>
       <nav className="print-screen-nav no-print">
         <Link href="/resources">← Resources</Link>
-        <Link href={`/print/card/parents?${photoQuery}`}>Parents</Link>
-        <Link href={`/print/card/kids?${photoQuery}`}>Kids</Link>
-        <Link href={`/print/card/schools?${photoQuery}`}>Schools</Link>
-        <Link href={`/print/card/coaching?${photoQuery}`}>Coaching</Link>
-        <Link href={`/print/card/events?${photoQuery}`}>Events</Link>
+        <Link href={`/print/card/parents?${query}`}>Parents</Link>
+        <Link href={`/print/card/kids?${query}`}>Kids</Link>
+        <Link href={`/print/card/schools?${query}`}>Schools</Link>
+        <Link href={`/print/card/coaching?${query}`}>Coaching</Link>
+        <Link href={`/print/card/events?${query}`}>Events</Link>
+        <span className="print-theme-toggle" aria-label="Print theme">
+          <Link
+            href={`/print/card/${audience}?${photoQuery}&theme=dark`}
+            className={cn(theme === "dark" && "is-active")}
+          >
+            Dark
+          </Link>
+          <Link
+            href={`/print/card/${audience}?${photoQuery}&theme=light`}
+            className={cn(theme === "light" && "is-active")}
+          >
+            Light
+          </Link>
+        </span>
         <a className="print-download-btn" href={pdfHref}>
           Download card PDF
         </a>
@@ -56,7 +77,9 @@ export function PrintCardSheets({
         >
           Preview / print
         </a>
-        <span className="print-hint">A5 · front + back · {photo.label}</span>
+        <span className="print-hint">
+          A5 · front + back · {photo.label} · {theme}
+        </span>
       </nav>
 
       <article className="print-sheet print-sheet--front" aria-label={`${card.title} card front`}>
