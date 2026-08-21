@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ExternalLink, Link2 } from "lucide-react";
+import { ExternalLink, Link2, Moon, Sun } from "lucide-react";
 
 import { DownloadCardPdfButton } from "@/components/download-card-pdf-button";
 import { Button } from "@/components/ui/button";
@@ -80,56 +80,90 @@ export function ResourcesPrintStudio() {
             download an A5 card PDF for parents, kids, schools, coaching, or
             events — the PDF is the designed card, not the raw photo.
           </p>
+
+          <div
+            id="print-theme"
+            className="mt-10 max-w-xl border border-border bg-card/40 p-5 sm:p-6"
+          >
+            <p className="font-mono text-[11px] tracking-[0.28em] text-secondary uppercase">
+              Step 1 · Card color
+            </p>
+            <h2 className="mt-2 text-xl font-semibold tracking-wide sm:text-2xl">
+              Dark or light PDF?
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              This sets the color of every card you download or preview below.
+            </p>
+            <div
+              className="mt-5 grid grid-cols-2 gap-3"
+              role="group"
+              aria-label="Print theme"
+            >
+              <button
+                type="button"
+                onClick={() => setTheme("dark")}
+                aria-pressed={theme === "dark"}
+                className={cn(
+                  "flex flex-col gap-3 border p-4 text-left transition-colors",
+                  theme === "dark"
+                    ? "border-primary bg-primary/15"
+                    : "border-border hover:border-primary/60"
+                )}
+              >
+                <span
+                  className="block h-14 w-full border border-border"
+                  style={{
+                    background:
+                      "linear-gradient(135deg,#2c2c2c 55%,#1a1a1a 55%)",
+                  }}
+                  aria-hidden
+                />
+                <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] uppercase">
+                  <Moon className="size-3.5" />
+                  Dark
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme("light")}
+                aria-pressed={theme === "light"}
+                className={cn(
+                  "flex flex-col gap-3 border p-4 text-left transition-colors",
+                  theme === "light"
+                    ? "border-primary bg-primary/15"
+                    : "border-border hover:border-primary/60"
+                )}
+              >
+                <span
+                  className="block h-14 w-full border border-border"
+                  style={{
+                    background:
+                      "linear-gradient(135deg,#f3f4f5 55%,#dde1e5 55%)",
+                  }}
+                  aria-hidden
+                />
+                <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] uppercase">
+                  <Sun className="size-3.5" />
+                  Light
+                </span>
+              </button>
+            </div>
+            <p className="mt-4 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              Selected: {theme} mode
+            </p>
+          </div>
         </div>
       </section>
 
       <section className="border-b border-border px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
-                Choose photo for the card
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-wide">
-                {photo.label}
-              </h2>
-            </div>
-
-            <div>
-              <p className="font-mono text-[11px] tracking-[0.28em] text-muted-foreground uppercase">
-                Print theme
-              </p>
-              <div
-                className="mt-2 inline-flex border border-border"
-                role="group"
-                aria-label="Print theme"
-              >
-                <button
-                  type="button"
-                  onClick={() => setTheme("dark")}
-                  className={cn(
-                    "px-4 py-2 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors",
-                    theme === "dark"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-background text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  Dark
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTheme("light")}
-                  className={cn(
-                    "px-4 py-2 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors",
-                    theme === "light"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-background text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  Light
-                </button>
-              </div>
-            </div>
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+              Step 2 · Choose photo for the card
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-wide">
+              {photo.label}
+            </h2>
           </div>
 
           <div className="mt-8 border border-border bg-card/20 p-4 sm:p-5">
@@ -209,6 +243,23 @@ export function ResourcesPrintStudio() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+              Step 3 · Download or preview
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-wide">
+              Cards in {theme} mode
+            </h2>
+          </div>
+          <a
+            href="#print-theme"
+            className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase underline-offset-4 hover:underline"
+          >
+            Change dark / light
+          </a>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {printCards.map((card) => {
             const query = buildCardQuery(card.id, photo, theme);

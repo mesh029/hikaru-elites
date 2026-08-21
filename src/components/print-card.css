@@ -26,6 +26,7 @@
   color: var(--print-fg);
   background: var(--print-page-bg);
   min-height: 100vh;
+  overflow-x: hidden;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
@@ -58,16 +59,36 @@
   top: 0;
   z-index: 50;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.75rem;
-  align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 0.85rem 1rem;
   background: var(--print-nav-bg);
   border-bottom: 1px solid var(--print-border);
   font-family: var(--font-source-code-pro), "Source Code Pro", monospace;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.print-nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
+  align-items: center;
+}
+
+.print-nav-audiences {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.65rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.15rem;
+  scrollbar-width: thin;
+}
+
+.print-nav-audiences a {
+  flex: 0 0 auto;
 }
 
 .print-screen-nav a {
@@ -97,12 +118,11 @@
 }
 
 .print-theme-toggle a.is-active {
-  background: var(--print-card);
-  color: var(--print-fg);
+  background: var(--print-primary);
+  color: #fff;
 }
 
 .print-hint {
-  margin-left: auto;
   color: var(--print-muted);
   letter-spacing: 0.06em;
   text-transform: none;
@@ -112,6 +132,7 @@
 .print-secondary-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   padding: 0.55rem 1rem;
   font-family: inherit;
   font-size: 11px;
@@ -140,16 +161,54 @@
   color: var(--print-accent);
 }
 
+/* Screen stage: scale A5 sheets to fit narrow viewports */
+.print-stage {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  overflow-x: hidden;
+}
+
+.print-sheet-frame {
+  width: min(var(--print-w), calc(100vw - 2rem));
+  max-width: 100%;
+  aspect-ratio: 148 / 210;
+  container-type: inline-size;
+  container-name: print-sheet;
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
 .print-sheet {
   width: var(--print-w);
   height: var(--print-h);
-  margin: 1.5rem auto;
-  position: relative;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
   overflow: hidden;
   background: var(--print-bg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  transform-origin: top left;
+  transform: scale(calc(100cqw / 148mm));
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+}
+
+@media (min-width: 640px) {
+  .print-screen-nav {
+    padding: 1rem 1.25rem;
+  }
+
+  .print-nav-actions {
+    margin-left: auto;
+  }
 }
 
 .print-sheet--back {
@@ -466,13 +525,34 @@
   }
 
   .print-sheet {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: var(--print-w) !important;
+    height: var(--print-h) !important;
     margin: 0 !important;
     box-shadow: none !important;
     background: var(--print-bg) !important;
+    transform: none !important;
     page-break-after: always;
     break-after: page;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  .print-sheet-frame {
+    width: var(--print-w) !important;
+    max-width: none !important;
+    height: var(--print-h) !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-stage {
+    padding: 0 !important;
+    gap: 0 !important;
+    display: block !important;
   }
 
   .print-sheet:last-child {

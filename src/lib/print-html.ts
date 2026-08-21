@@ -28,28 +28,45 @@ html,body{
   background:var(--print-page-bg);
   color:var(--print-fg);
   font-family:Oxanium,sans-serif;
+  overflow-x:hidden;
 }
-body{display:block!important;min-height:0!important;height:auto!important;overflow:visible!important}
+body{display:block!important;min-height:0!important;height:auto!important;overflow-x:hidden!important}
 .nav{
-  position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;
-  padding:1rem 1.25rem;background:var(--print-nav-bg);border-bottom:1px solid var(--print-border);
+  position:sticky;top:0;z-index:20;display:flex;flex-direction:column;gap:.75rem;
+  padding:.85rem 1rem;background:var(--print-nav-bg);border-bottom:1px solid var(--print-border);
   font-family:"Source Code Pro",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase
 }
+.nav-row{display:flex;flex-wrap:wrap;gap:.55rem .75rem;align-items:center}
+.nav-audiences{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:.15rem}
+.nav-audiences a{flex:0 0 auto}
 .nav a{color:var(--print-accent);text-decoration:none}
 .btn{
-  display:inline-flex;align-items:center;padding:.55rem 1rem;border:1px solid var(--print-primary);
+  display:inline-flex;align-items:center;justify-content:center;padding:.55rem 1rem;border:1px solid var(--print-primary);
   background:var(--print-primary);color:#fff;font:inherit;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none
+}
+.btn-secondary{
+  display:inline-flex;align-items:center;justify-content:center;padding:.55rem 1rem;border:1px solid var(--print-border);
+  background:transparent;color:var(--print-fg);font:inherit;letter-spacing:.14em;text-transform:uppercase;text-decoration:none
 }
 .theme-toggle{display:inline-flex;border:1px solid var(--print-border);overflow:hidden}
 .theme-toggle a{
   padding:.45rem .7rem;color:var(--print-muted);text-decoration:none;border-right:1px solid var(--print-border)
 }
 .theme-toggle a:last-child{border-right:0}
-.theme-toggle a.is-active{background:var(--print-card);color:var(--print-fg)}
-.hint{margin-left:auto;color:var(--print-muted);text-transform:none;letter-spacing:.06em}
+.theme-toggle a.is-active{background:var(--print-primary);color:#fff}
+.hint{color:var(--print-muted);text-transform:none;letter-spacing:.06em}
+.stage{
+  width:100%;max-width:100%;box-sizing:border-box;padding:1rem;display:flex;flex-direction:column;
+  align-items:center;gap:1.25rem;overflow-x:hidden
+}
+.sheet-frame{
+  width:min(148mm,calc(100vw - 2rem));max-width:100%;aspect-ratio:148/210;container-type:inline-size;container-name:print-sheet;
+  position:relative;margin:0;overflow:hidden
+}
 .sheet{
-  width:148mm;height:210mm;margin:1.5rem auto;position:relative;overflow:hidden;
+  width:148mm;height:210mm;margin:0;position:absolute;top:0;left:0;overflow:hidden;
   background:var(--print-bg);box-shadow:0 12px 40px rgba(0,0,0,.55);
+  transform-origin:top left;transform:scale(calc(100cqw / 148mm));
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
 }
 .sheet-back{display:flex;flex-direction:column}
@@ -89,8 +106,13 @@ body{display:block!important;min-height:0!important;height:auto!important;overfl
 @page{size:A5 portrait;margin:0}
 @media print{
   .nav,.no-print{display:none!important}
-  html,body{background:var(--print-bg)!important}
-  .sheet{margin:0;box-shadow:none;page-break-after:always;break-after:page}
+  html,body{background:var(--print-bg)!important;overflow:visible!important}
+  .stage{padding:0!important;gap:0!important;display:block!important}
+  .sheet-frame{width:148mm!important;max-width:none!important;height:210mm!important;aspect-ratio:auto!important;margin:0!important;overflow:visible!important}
+  .sheet{
+    position:relative!important;top:auto!important;left:auto!important;width:148mm!important;height:210mm!important;
+    margin:0;box-shadow:none;transform:none!important;page-break-after:always;break-after:page
+  }
   .sheet:last-child{page-break-after:auto;break-after:auto}
 }
 `;
@@ -162,20 +184,28 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
 </head>
 <body>
 <nav class="nav no-print">
-  <a href="${escapeHtml(origin)}/resources">← Resources</a>
-  <a href="?audience=parents&${queryBase}">Parents</a>
-  <a href="?audience=kids&${queryBase}">Kids</a>
-  <a href="?audience=schools&${queryBase}">Schools</a>
-  <a href="?audience=coaching&${queryBase}">Coaching</a>
-  <a href="?audience=events&${queryBase}">Events</a>
-  <span class="theme-toggle" aria-label="Print theme">
-    <a class="${theme === "dark" ? "is-active" : ""}" href="${darkHref}">Dark</a>
-    <a class="${theme === "light" ? "is-active" : ""}" href="${lightHref}">Light</a>
-  </span>
-  <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
-  <span class="hint">A5 · front + back · ${escapeHtml(photo.label)} · ${theme}</span>
+  <div class="nav-row">
+    <a href="${escapeHtml(origin)}/resources">← Resources</a>
+    <span class="theme-toggle" aria-label="Print theme">
+      <a class="${theme === "dark" ? "is-active" : ""}" href="${darkHref}">Dark</a>
+      <a class="${theme === "light" ? "is-active" : ""}" href="${lightHref}">Light</a>
+    </span>
+    <span class="hint">A5 · ${escapeHtml(photo.label)} · ${theme}</span>
+  </div>
+  <div class="nav-row nav-audiences">
+    <a href="?audience=parents&${queryBase}">Parents</a>
+    <a href="?audience=kids&${queryBase}">Kids</a>
+    <a href="?audience=schools&${queryBase}">Schools</a>
+    <a href="?audience=coaching&${queryBase}">Coaching</a>
+    <a href="?audience=events&${queryBase}">Events</a>
+  </div>
+  <div class="nav-row">
+    <a class="btn" id="print-btn" href="${pdfHref}">Download card PDF</a>
+  </div>
 </nav>
 
+<div class="stage">
+<div class="sheet-frame">
 <article class="sheet" aria-label="${escapeHtml(card.title)} card front">
   <img class="photo" src="${photoSrc}" alt="${escapeHtml(photo.alt)}" style="object-position:${objectPosition}"/>
   <div class="veil" aria-hidden="true"></div>
@@ -188,7 +218,9 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
     <p class="meta"><span>hikaru-chess-elites.online</span><span>${escapeHtml(card.frontMeta)}</span></p>
   </div>
 </article>
+</div>
 
+<div class="sheet-frame">
 <article class="sheet sheet-back" aria-label="${escapeHtml(card.title)} card back">
   <div class="inner">
     <header class="head">
@@ -212,6 +244,8 @@ document.getElementById('print-btn')?.addEventListener('click', function(){
     <p class="foot">Hikaru Chess Elites · We train minds. In schools. At the board.</p>
   </div>
 </article>
+</div>
+</div>
 ${autoScript}
 </body>
 </html>`;
