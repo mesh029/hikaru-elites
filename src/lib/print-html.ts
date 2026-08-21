@@ -57,16 +57,16 @@ body{display:block!important;min-height:0!important;height:auto!important;overfl
 .hint{color:var(--print-muted);text-transform:none;letter-spacing:.06em}
 .stage{
   width:100%;max-width:100%;box-sizing:border-box;padding:1rem;display:flex;flex-direction:column;
-  align-items:center;gap:1.25rem;overflow-x:hidden
+  align-items:center;gap:1.25rem;overflow-x:clip
 }
 .sheet-frame{
-  width:min(148mm,calc(100vw - 2rem));max-width:100%;aspect-ratio:148/210;container-type:inline-size;container-name:print-sheet;
+  width:min(148mm,100%);max-width:100%;aspect-ratio:148/210;
   position:relative;margin:0;overflow:hidden
 }
 .sheet{
   width:148mm;height:210mm;margin:0;position:absolute;top:0;left:0;overflow:hidden;
   background:var(--print-bg);box-shadow:0 12px 40px rgba(0,0,0,.55);
-  transform-origin:top left;transform:scale(calc(100cqw / 148mm));
+  transform-origin:top left;transform:scale(var(--print-scale,1));
   -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
 }
 .sheet-back{display:flex;flex-direction:column}
@@ -166,9 +166,28 @@ export function buildPrintCardHtml({
   const autoScript = autoprint
     ? `<script>location.replace(${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${queryBase}`)});</script>`
     : `<script>
-document.getElementById('print-btn')?.addEventListener('click', function(){
-  location.href = ${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${queryBase}`)};
-});
+(function(){
+  function measureA5(){
+    var d=document.createElement('div');
+    d.style.cssText='width:148mm;height:0;position:absolute;visibility:hidden;pointer-events:none';
+    document.body.appendChild(d);
+    var w=d.offsetWidth||560;
+    d.remove();
+    return w;
+  }
+  function fit(){
+    var a5=measureA5();
+    document.querySelectorAll('.sheet-frame').forEach(function(frame){
+      var s=Math.min(1, frame.clientWidth/a5);
+      frame.style.setProperty('--print-scale', String(s));
+    });
+  }
+  document.getElementById('print-btn')?.addEventListener('click', function(){
+    location.href = ${JSON.stringify(`${origin}/api/print-pdf?audience=${audience}&${queryBase}`)};
+  });
+  window.addEventListener('resize', fit);
+  fit();
+})();
 </script>`;
 
   const darkHref = `?audience=${encodeURIComponent(audience)}&${photoQ}&theme=dark`;

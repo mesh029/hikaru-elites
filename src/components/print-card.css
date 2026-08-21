@@ -161,7 +161,7 @@
   color: var(--print-accent);
 }
 
-/* Screen stage: scale A5 sheets to fit narrow viewports */
+/* Screen stage: scale A5 sheets to fit narrow viewports via --print-scale (JS) */
 .print-stage {
   width: 100%;
   max-width: 100%;
@@ -171,15 +171,13 @@
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .print-sheet-frame {
-  width: min(var(--print-w), calc(100vw - 2rem));
+  width: min(148mm, 100%);
   max-width: 100%;
   aspect-ratio: 148 / 210;
-  container-type: inline-size;
-  container-name: print-sheet;
   position: relative;
   margin: 0;
   overflow: hidden;
@@ -196,9 +194,20 @@
   background: var(--print-bg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
   transform-origin: top left;
-  transform: scale(calc(100cqw / 148mm));
+  transform: scale(var(--print-scale, 1));
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+}
+
+html.print-preview-active,
+body.print-preview-active {
+  overflow-x: clip !important;
+  max-width: 100% !important;
+}
+
+body.print-preview-active > main {
+  overflow-x: clip !important;
+  max-width: 100% !important;
 }
 
 @media (min-width: 640px) {

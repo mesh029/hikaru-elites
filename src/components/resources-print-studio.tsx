@@ -33,6 +33,62 @@ function buildCardQuery(
   return params.toString();
 }
 
+function ThemeToggle({
+  theme,
+  onChange,
+  size = "default",
+}: {
+  theme: PrintTheme;
+  onChange: (theme: PrintTheme) => void;
+  size?: "default" | "compact";
+}) {
+  return (
+    <div
+      className={cn(
+        "inline-flex border border-border",
+        size === "compact" ? "w-full" : ""
+      )}
+      role="group"
+      aria-label="Card color"
+    >
+      <button
+        type="button"
+        onClick={() => onChange("dark")}
+        aria-pressed={theme === "dark"}
+        className={cn(
+          "inline-flex flex-1 items-center justify-center gap-2 font-mono uppercase transition-colors",
+          size === "compact"
+            ? "px-3 py-2 text-[10px] tracking-[0.14em]"
+            : "px-4 py-2.5 text-[11px] tracking-[0.16em]",
+          theme === "dark"
+            ? "bg-primary text-primary-foreground"
+            : "bg-background text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <Moon className="size-3.5" />
+        Dark
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("light")}
+        aria-pressed={theme === "light"}
+        className={cn(
+          "inline-flex flex-1 items-center justify-center gap-2 font-mono uppercase transition-colors",
+          size === "compact"
+            ? "px-3 py-2 text-[10px] tracking-[0.14em]"
+            : "px-4 py-2.5 text-[11px] tracking-[0.16em]",
+          theme === "light"
+            ? "bg-primary text-primary-foreground"
+            : "bg-background text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <Sun className="size-3.5" />
+        Light
+      </button>
+    </div>
+  );
+}
+
 export function ResourcesPrintStudio() {
   const [photoId, setPhotoId] = useState<string>(DEFAULT_PRINT_PHOTO_ID);
   const [customUrl, setCustomUrl] = useState("");
@@ -67,6 +123,21 @@ export function ResourcesPrintStudio() {
 
   return (
     <div className="pt-14">
+      <div className="sticky top-14 z-40 border-b border-border bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.28em] text-secondary uppercase">
+              Card color for downloads
+            </p>
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              Selected: <span className="text-foreground">{theme}</span> mode —
+              applies to every PDF below
+            </p>
+          </div>
+          <ThemeToggle theme={theme} onChange={setTheme} />
+        </div>
+      </div>
+
       <section className="border-b border-border px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
@@ -76,9 +147,8 @@ export function ResourcesPrintStudio() {
             Print cards
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Pick a photo (or paste an image URL), choose light or dark, then
-            download an A5 card PDF for parents, kids, schools, coaching, or
-            events — the PDF is the designed card, not the raw photo.
+            Use the Dark / Light bar at the top, pick a photo, then download an
+            A5 card PDF — the PDF is the designed card, not the raw photo.
           </p>
 
           <div
@@ -92,13 +162,9 @@ export function ResourcesPrintStudio() {
               Dark or light PDF?
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              This sets the color of every card you download or preview below.
+              Same control as the sticky bar — pick once for all downloads.
             </p>
-            <div
-              className="mt-5 grid grid-cols-2 gap-3"
-              role="group"
-              aria-label="Print theme"
-            >
+            <div className="mt-5 grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setTheme("dark")}
@@ -148,9 +214,6 @@ export function ResourcesPrintStudio() {
                 </span>
               </button>
             </div>
-            <p className="mt-4 font-mono text-xs tracking-wide text-muted-foreground uppercase">
-              Selected: {theme} mode
-            </p>
           </div>
         </div>
       </section>
@@ -252,12 +315,7 @@ export function ResourcesPrintStudio() {
               Cards in {theme} mode
             </h2>
           </div>
-          <a
-            href="#print-theme"
-            className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase underline-offset-4 hover:underline"
-          >
-            Change dark / light
-          </a>
+          <ThemeToggle theme={theme} onChange={setTheme} />
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -290,24 +348,27 @@ export function ResourcesPrintStudio() {
                   </div>
                 </div>
 
-                <div className="flex flex-1 flex-col p-5">
+                <div className="flex flex-1 flex-col gap-3 p-5">
                   <p className="text-sm text-muted-foreground">{card.body}</p>
-                  <div className="mt-6 flex flex-col gap-3">
-                    <DownloadCardPdfButton
-                      href={pdfHref}
-                      filenameHint={`hikaru-a5-${card.id}-${photo.id}-${theme}.pdf`}
-                    />
-                    <Button
-                      render={
-                        <a href={previewHref} target="_blank" rel="noreferrer" />
-                      }
-                      variant="outline"
-                      className="w-full"
-                    >
-                      <ExternalLink className="size-4" />
-                      Preview card
-                    </Button>
-                  </div>
+                  <ThemeToggle
+                    theme={theme}
+                    onChange={setTheme}
+                    size="compact"
+                  />
+                  <DownloadCardPdfButton
+                    href={pdfHref}
+                    filenameHint={`hikaru-a5-${card.id}-${photo.id}-${theme}.pdf`}
+                  />
+                  <Button
+                    render={
+                      <a href={previewHref} target="_blank" rel="noreferrer" />
+                    }
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <ExternalLink className="size-4" />
+                    Preview card
+                  </Button>
                 </div>
               </article>
             );

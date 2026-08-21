@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
+import { PrintSheetFrame } from "@/components/print-sheet-frame";
 import type { PrintCardAudience, PrintPhoto } from "@/lib/content";
 import { getPrintCard } from "@/lib/content";
 import {
@@ -43,12 +44,23 @@ export function PrintCardSheets({
     window.location.replace(pdfHref);
   }, [autoprint, pdfHref]);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    html.classList.add("print-preview-active");
+    body.classList.add("print-preview-active");
+    return () => {
+      html.classList.remove("print-preview-active");
+      body.classList.remove("print-preview-active");
+    };
+  }, []);
+
   return (
     <div className="print-root" data-print-theme={theme}>
       <nav className="print-screen-nav no-print">
         <div className="print-nav-row">
           <Link href="/resources">← Resources</Link>
-          <span className="print-theme-toggle" aria-label="Print theme">
+          <span className="print-theme-toggle" aria-label="Card color">
             <Link
               href={`/print/card/${audience}?${photoQuery}&theme=dark`}
               className={cn(theme === "dark" && "is-active")}
@@ -89,7 +101,7 @@ export function PrintCardSheets({
       </nav>
 
       <div className="print-stage">
-        <div className="print-sheet-frame">
+        <PrintSheetFrame>
           <article
             className="print-sheet print-sheet--front"
             aria-label={`${card.title} card front`}
@@ -114,9 +126,9 @@ export function PrintCardSheets({
               </p>
             </div>
           </article>
-        </div>
+        </PrintSheetFrame>
 
-        <div className="print-sheet-frame">
+        <PrintSheetFrame>
           <article
             className="print-sheet print-sheet--back"
             aria-label={`${card.title} card back`}
@@ -177,7 +189,7 @@ export function PrintCardSheets({
               </p>
             </div>
           </article>
-        </div>
+        </PrintSheetFrame>
       </div>
     </div>
   );
